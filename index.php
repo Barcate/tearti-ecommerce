@@ -41,47 +41,92 @@
     </section>
     <section class="conteudo">
         <div class="container">
-            <div class="flex-item">
-                
-                <div class="imagem"></div>
-                <p>Caneca bonita</p>
-
+            <div class="produto">
+                <div class="imagem" style="background-image: url('./fotos/BACKGROUND-INICIAL.png');"></div>
+                <div class="informacao">
+                    <p class="nome">Produto genérico</p>
+                    <p class="preco">R$10,00</p>
+                </div>
             </div>
-            <div class="flex-item">
-                
-                <div class="imagem"></div>
-                <p>Caneca bonita</p>
-
+            <div class="produto">
+                <div class="imagem" style="background-image: url('./fotos/BACKGROUND-INICIAL.png');"></div>
+                <div class="informacao">
+                    <p class="nome">Produto genérico</p>
+                    <p class="preco">R$10,00</p>
+                </div>
             </div>
-            <div class="flex-item">
-                
-                <div class="imagem"></div>
-                <p>Caneca Bonita</p>
-
+            <div class="produto">
+                <div class="imagem" style="background-image: url('./fotos/BACKGROUND-INICIAL.png');"></div>
+                <div class="informacao">
+                    <p class="nome">Produto genérico</p>
+                    <p class="preco">R$10,00</p>
+                </div>
             </div>
-            <div class="flex-item">
-                
-                <div class="imagem"></div>
-                <p>Caneca Bonita</p>
-
+            <div class="produto">
+                <div class="imagem" style="background-image: url('./fotos/BACKGROUND-INICIAL.png');"></div>
+                <div class="informacao">
+                    <p class="nome">Produto genérico</p>
+                    <p class="preco">R$10,00</p>
+                </div>
+            </div>
+            <div class="produto">
+                <div class="imagem" style="background-image: url('./fotos/BACKGROUND-INICIAL.png');"></div>
+                <div class="informacao">
+                    <p class="nome">Produto genérico</p>
+                    <p class="preco">R$10,00</p>
+                </div>
+            </div>
+            <div class="produto">
+                <div class="imagem" style="background-image: url('./fotos/BACKGROUND-INICIAL.png');"></div>
+                <div class="informacao">
+                    <p class="nome">Produto genérico</p>
+                    <p class="preco">R$10,00</p>
+                </div>
+            </div>
+            <div class="produto">
+                <div class="imagem" style="background-image: url('./fotos/BACKGROUND-INICIAL.png');"></div>
+                <div class="informacao">
+                    <p class="nome">Produto genérico</p>
+                    <p class="preco">R$10,00</p>
+                </div>
+            </div>
+            <div class="produto">
+                <div class="imagem" style="background-image: url('./fotos/BACKGROUND-INICIAL.png');"></div>
+                <div class="informacao">
+                    <p class="nome">Produto genérico</p>
+                    <p class="preco">R$10,00</p>
+                </div>
+            </div>
+            <div class="produto">
+                <div class="imagem" style="background-image: url('./fotos/BACKGROUND-INICIAL.png');"></div>
+                <div class="informacao">
+                    <p class="nome">Produto genérico</p>
+                    <p class="preco">R$10,00</p>
+                </div>
+            </div>
+            <div class="produto">
+                <div class="imagem" style="background-image: url('./fotos/BACKGROUND-INICIAL.png');"></div>
+                <div class="informacao">
+                    <p class="nome">Produto genérico</p>
+                    <p class="preco">R$10,00</p>
+                </div>
             </div>
         </div>
-        
     </section>
     <script>
         var onda1 = document.getElementById('onda1')
-            var onda2 = document.getElementById('onda2')
-            var onda3 = document.getElementById('onda3')
-            var onda4 = document.getElementById('onda4')
+        var onda2 = document.getElementById('onda2')
+        var onda3 = document.getElementById('onda3')
+        var onda4 = document.getElementById('onda4')
 
-            window.addEventListener('scroll', function(){
-                var rolagemPos = window.scrollY 
+        window.addEventListener('scroll', () => {
+            var rolagemPos = window.scrollY 
 
-                onda1.style.backgroundPositionX = 400 + rolagemPos * 4 + 'px';
-                onda2.style.backgroundPositionX = 300 + rolagemPos * -4 + 'px';
-                onda3.style.backgroundPositionX = 200 + rolagemPos * 2 + 'px';
-                onda4.style.backgroundPositionX = 100 + rolagemPos * -2 + 'px';
-            })
+            onda1.style.backgroundPositionX = 400 + rolagemPos * 4 + 'px';
+            onda2.style.backgroundPositionX = 300 + rolagemPos * -4 + 'px';
+            onda3.style.backgroundPositionX = 200 + rolagemPos * 2 + 'px';
+            onda4.style.backgroundPositionX = 100 + rolagemPos * -2 + 'px';
+        })
     </script>
 </body>
 </html>

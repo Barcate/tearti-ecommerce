@@ -1,3 +1,7 @@
+:root {
+    --tamanho-produto: 300px;
+}
+
 *{
     margin: 0;
     padding: 0;
@@ -56,22 +60,22 @@ section.ondas-box{
     animation: ondaAnimada 5s ease-in-out infinite alternate;
 }
 #onda1{
-    z-index: 1000;
+    z-index: 800;
     opacity: 1;
     background-position-x: 400px;
 }
 #onda2{
-    z-index: 999;
+    z-index: 799;
     opacity: 0.5;
     background-position-x: 300px;
 }
 #onda3{
-    z-index: 998;
+    z-index: 798;
     opacity: 0.2;
     background-position-x: 200px;
 }
 #onda4{
-    z-index: 997;
+    z-index: 797;
     opacity: 0.8;
     background-position-x: 100px;
 }
@@ -158,7 +162,7 @@ section.ondas-box{
     width: 100%;
     }
 }
-section.conteudo{
+/* section.conteudo{
     width: 100%;    
     height: 100%;
     padding-top: 100px;
@@ -204,4 +208,83 @@ section > div.container{
 }
 .flex-item:hover p{
     display: inline;
+} */
+
+.conteudo {
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    padding-bottom: 100px;
+    padding-top: 50px;
+}
+
+.container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, var(--tamanho-produto));
+    grid-gap: 10px;
+    justify-content: center;
+    width: 90vw;
+}
+
+.produto {
+    width: var(--tamanho-produto);
+    height: var(--tamanho-produto);
+    padding: 20px;
+    background: rgb(236, 236, 236);
+    transition: .3s;
+    border-radius: 10px;
+    z-index: 999;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.produto:hover {
+    height: auto;
+}
+
+.imagem {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    background-color: #333;
+    background-size: cover;
+    background-position: center center;
+    border-radius: 30px;
+    transition: .3s;
+}
+
+.produto:hover > .imagem {
+    border-radius: 15px;
+}
+
+.informacao {
+    position: fixed;
+    visibility: hidden;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    opacity: 0;
+    transition: .3s;
+}
+
+.produto:hover > .informacao {
+    visibility: visible;
+    position: initial;
+    opacity: 1;
+}
+
+.nome {
+    color: #6e6e6e;
+    font-size: 1.2em;
+    font-style: italic;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+.preco {
+    align-self: flex-end;
+    color: rgb(111, 172, 95);
+    font-size: 2em;
+    font-family: Arial, Helvetica, sans-serif;
 }
