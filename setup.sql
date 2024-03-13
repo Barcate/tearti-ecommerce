@@ -15,7 +15,7 @@ create table produto (
 create table thumbnail (
     id int auto_increment,
     id_produto int,
-    caminho_imagem text,
+    base64 text,
     foreign key(id_produto) references produto(id),
     primary key(id)
 );
