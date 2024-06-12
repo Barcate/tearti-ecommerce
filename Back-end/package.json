@@ -5,7 +5,12 @@
   "main": "index.js",
   "scripts": {
     "start": "node .",
-    "dev": "nodemon ."
+    "dev": "nodemon .",
+    "create_db": "node scripts/create_database.js",
+    "populate_db": "node scripts/populate_database.js",
+    "delete_db": "node scripts/delete_database.js",
+    "reset_db": "npm run delete_db && npm run create_db",
+    "test": "jest"
   },
   "author": "joojdev",
   "license": "ISC",
@@ -16,6 +21,8 @@
   },
   "devDependencies": {
     "dotenv": "^16.4.5",
-    "nodemon": "^3.1.0"
+    "jest": "^29.7.0",
+    "nodemon": "^3.1.0",
+    "supertest": "^7.0.0"
   }
 }
