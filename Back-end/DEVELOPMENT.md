@@ -23,3 +23,9 @@ Remover banco de dados e criar novamente:
 ```sh
 npm run reset_db
 ```
+
+Para testar:
+
+```sh
+npm run test
+```
