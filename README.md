@@ -12,7 +12,7 @@ Este tutorial vai te guiar através do processo de clonagem de um repositório, 
 Primeiro, você precisa clonar o repositório do GitHub para a sua máquina local, Abra o terminal e execute o comando:
 
 ```sh
-git clone https://github.com/joojdev/tearti-ecommerce.git
+git clone https://github.com/Barcate/tearti-ecommerce.git
 ```
 
 ## Passo 3: Instalar as dependências do Node.js
