@@ -1,20 +1,23 @@
 require('dotenv').config()
 const express = require('express')
+const cors = require('cors');
 const {
     createProduto,
     getProduto,
+    getallProduto,
     updateProduto,
     deleteProduto,
     createThumbnail,
     getThumbnail,
+    getallThumbnail,
     updateThumbnail,
     deleteThumbnail
 } = require('./database')
-
 const expressApp = express()
 
 expressApp.use(express.json())
 
+expressApp.use(cors());
 expressApp.get('/status', (request, response) => {
     response.json({ status: 'OK' })
 })
@@ -26,6 +29,18 @@ expressApp.post('/produtos', async (request, response) => {
     try {
         const id = await createProduto(nome, descricao, preco, estoque, disponivel)
         response.status(201).json({ id })
+    } catch (error) {
+        response.status(500).json({ error: error.message })
+    }
+})
+expressApp.get('/produtos', async (request, response) => {
+    try {
+        const produto = await getallProduto()
+        if (produto) {
+            response.json(produto)
+        } else {
+            response.status(404).json({ error: 'Produto não encontrado!' })
+        }
     } catch (error) {
         response.status(500).json({ error: error.message })
     }
@@ -73,6 +88,18 @@ expressApp.post('/thumbnails', async (request, response) => {
     try {
         const id = await createThumbnail(base64, produtoID)
         response.status(201).json({ id })
+    } catch (error) {
+        response.status(500).json({ error: error.message })
+    }
+})
+expressApp.get('/thumbnails', async (request, response) => {
+    try {
+        const thumbnail = await getallThumbnail()
+        if (thumbnail) {
+            response.json(thumbnail)
+        } else {
+            response.status(404).json({ error: 'Thumbnail não encontrado!' })
+        }
     } catch (error) {
         response.status(500).json({ error: error.message })
     }

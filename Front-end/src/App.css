@@ -1,0 +1,222 @@
+:root {
+    --tamanho-produto: 300px;
+}
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    width: 100vw;
+    height: 100%;
+    margin: 0 auto;
+    min-width: 840px;
+    max-width: 10000px;
+    overflow-x: hidden;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    background-color: transparent;
+    background-image: url(/images/BG.png);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+}
+
+
+/* FONTESSSSSSSSSSSSSSSSSSSSSSSSSSS */
+
+@font-face {
+    font-family: sans;
+    src: url(/Fonts/Sans.otf);
+}
+
+
+/* FONTESSSSSSSSSSSSSSSSSSSSSSSSSSS */
+
+head {
+    border: none;
+    overflow: hidden;
+}
+section.ondas-box{
+    width: 100%;
+    height: 100vh;
+}
+.onda{
+    width: 100vw;
+    height: 100px;
+    position: absolute;
+    bottom: 0;
+    background-image: url(/images/ondas.png);
+    background-size: 1000px 100px;
+
+    animation: ondaAnimada 5s ease-in-out infinite alternate;
+}
+#onda1{
+    z-index: 800;
+    opacity: 1;
+    background-position-x: 400px;
+}
+#onda2{
+    z-index: 799;
+    opacity: 0.5;
+    background-position-x: 300px;
+}
+#onda3{
+    z-index: 798;
+    opacity: 0.2;
+    background-position-x: 200px;
+}
+#onda4{
+    z-index: 797;
+    opacity: 0.8;
+    background-position-x: 100px;
+}
+@keyframes ondaAnimada{
+    0%{
+        transform: translateY(0px);
+    }
+    100%{
+        transform: translateY(25px);
+    }
+}
+.titulo{
+    height: 100%;
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.titulo h1{
+    font-size: 66px;
+    font-family: sans;
+    color: #CBBDAF;
+}
+.L2{
+    font-family: sans;
+    font-size: 24px;
+    color: #cbbdaf93;
+    margin-top: -5px;
+}
+.barrinha{
+    height: 5px;
+    width: 65px;
+    margin-top: 10px;
+    background-color: #CBBDAF;
+    border-radius: 100px;
+    align-items: center;
+    text-align: center;
+}
+.Botao1{
+    width: 150px;
+    height: 45px;
+    margin-top: 20px;
+    border-radius: 10rem;
+    color: #ffffff;
+    text-transform: uppercase;
+    background-color: #ECBD30;
+    font-size: 15px;
+    font-family: sans;
+    transition: all .3s;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    text-decoration: none;
+    border: none;
+}
+.Botao1:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 10rem;
+    z-index: -2;
+}
+.Botao1:before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0%;
+    height: 100%;
+    background-color: #CBBDAF;
+    transition: all .3s;
+    border-radius: 10rem;
+    z-index: -1;
+    text-decoration: none;
+}
+.Botao1:hover {
+    color: #000000;
+    &:before {
+    width: 100%;
+    }
+}
+/* section.conteudo{
+    width: 100%;    
+    height: 100%;
+    padding-top: 100px;
+    padding-bottom: 100px;
+    background-color: white;
+    display: flex;
+    justify-content: center;
+
+    
+
+}
+section > div.container{
+    width: 80%;
+    height: 100%;
+    background-color: white;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-self: flex-start;
+    object-fit: contain;
+    justify-content: flex-start;    
+    gap: 50px;
+}
+.flex-item{
+    width: 31%;
+    background-color: #ffffff; 
+    padding: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.177);
+}
+.imagem{
+    aspect-ratio: 1/1;
+    background-color: black;
+    background-size: cover;
+    background-position: center center;
+}
+.flex-item p{
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    display: none;
+}
+.flex-item:hover{
+    background-color: #ff0000;
+    padding-bottom: 100px;
+}
+.flex-item:hover p{
+    display: inline;
+} */
+
+.conteudo {
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    padding-bottom: 100px;
+    padding-top: 50px;
+}
+
+.container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, var(--tamanho-produto));
+    grid-gap: 10px;
+    justify-content: center;
+    width: 90vw;
+}

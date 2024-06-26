@@ -24,6 +24,17 @@ function getQuery(query, params) {
     })
   })
 }
+function getQueryall(query, params) {
+  return new Promise((resolve, reject) => {
+    db.all(query, params, (err, row) => {
+      if (err) {
+        reject(err)
+      } else {
+        resolve(row)
+      }
+    })
+  })
+}
 
 async function createProduto(nome, descricao, preco, estoque, disponivel) {
   try {
@@ -39,6 +50,15 @@ async function createProduto(nome, descricao, preco, estoque, disponivel) {
 async function getProduto(id) {
   try {
     const row = await getQuery(`SELECT * FROM Produto WHERE ID = ?`, [id])
+    console.log(row)
+    return row
+  } catch (err) {
+    console.error(err.message)
+  }
+}
+async function getallProduto() {
+  try {
+    const row = await getQueryall(`SELECT * FROM Produto`)
     console.log(row)
     return row
   } catch (err) {
@@ -75,7 +95,15 @@ async function createThumbnail(base64, produtoID) {
     console.error(err.message)
   }
 }
-
+async function getallThumbnail() {
+  try {
+    const row = await getQueryall(`SELECT * FROM Thumbnail`)
+    console.log(row)
+    return row
+  } catch (err) {
+    console.error(err.message)
+  }
+}
 async function getThumbnail(id) {
   try {
     const row = await getQuery(`SELECT * FROM Thumbnail WHERE ID = ?`, [id])
@@ -108,10 +136,12 @@ async function deleteThumbnail(id) {
 module.exports = {
   createProduto,
   getProduto,
+  getallProduto,
   updateProduto,
   deleteProduto,
   createThumbnail,
   getThumbnail,
+  getallThumbnail,
   updateThumbnail,
   deleteThumbnail
 }
