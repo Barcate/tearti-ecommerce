@@ -25,7 +25,7 @@ cd tearti-ecommerce
 Execute:
 
 ````sh
-cd Frond-end && npm install && cd ../Back-end && npm install && cd ..
+cd Front-end && npm install && cd ../Back-end && npm install && cd ..
 ````
 
 (Nota: Para usuarios de windows evite colocar os arquivos dentro do onedrive)
