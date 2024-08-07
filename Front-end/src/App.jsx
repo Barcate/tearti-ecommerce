@@ -2,46 +2,51 @@ import React, { useEffect, useState } from 'react';
 import './App.css';
 import Item from './components/Item/Item';
 
-
 const App = () => {
   const [produto, setProdutos] = useState([]);
-  const [thumbnail, setThumbnails] = useState([]);
-  //listar produtos
+  const [thumbnail, setThumbnails] = useState({});
 
-
-  useEffect(()=>{
-    const fetchData = async() => {
-      try{
-        const response = await fetch(`http://localhost:5000/produtos`)
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`http://localhost:3000/produtos`);
         const data = await response.json();
         setProdutos(data);
-        console.log(setProdutos)
+        console.log("Produtos:", data);
 
-        // Fetch thumbnails for each product
         const thumbnailsData = await Promise.all(
-          data.map(async (produto) => { 
-            const thumbResponse = await fetch(`http://localhost:5000/thumbnails/${produto.ID}`);  
-            const thumbData = await thumbResponse.json();
-            console.log(thumbData)
-            return { id: produto.id, thumbnail: thumbData.base64 };
+          data.map(async (produto) => {
+            try {
+              const thumbResponse = await fetch(`http://localhost:3000/thumbnails/${produto.ID}`);
+              if (!thumbResponse.ok) {
+                throw new Error(`Failed to fetch thumbnail for product ${produto.ID}`);
+              }
+              const thumbData = await thumbResponse.json();
+              console.log(`Thumbnail for ${produto.ID}:`, thumbData);
+              return { id: produto.ID, thumbnail: thumbData.BASE64 || 'No thumbnail text' }; // Ensure there's a fallback text
+            } catch (error) {
+              console.error(`Error fetching thumbnail for product ${produto.ID}:`, error);
+              return { id: produto.ID, thumbnail: 'Error fetching thumbnail' };
+            }
           })
         );
 
-        // Convert the array to an object with product id as keys
+        console.log("Thumbnails Data Array:", thumbnailsData);
+
         const thumbnailsObject = thumbnailsData.reduce((acc, { id, thumbnail }) => {
           acc[id] = thumbnail;
           return acc;
         }, {});
 
+        console.log("Thumbnails Object:", thumbnailsObject);
         setThumbnails(thumbnailsObject);
-      }catch(error){
+      } catch (error) {
         console.error('Error fetching data:', error);
       }
     };
     fetchData();
   }, []);
 
-  //Funcionamento das ondas oscilando
   useEffect(() => {
     const handleScroll = () => {
       const scrollPosition = window.scrollY;
@@ -54,6 +59,7 @@ const App = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
   return (
     <div>
       <section className="ondas-box">
@@ -72,14 +78,15 @@ const App = () => {
       </section>
       <section className="conteudo">
         <div className="container">
-        {produto.map(produto => (
+          {produto.map(produto => (
             <Item
               key={produto.ID}
+              itemKey={produto.ID}
               name={produto.NOME}
               price={produto.PRECO}
               estoque={produto.ESTOQUE}
               disponivel={produto.DISPONIVEL}
-              imagem={`${thumbnail[produto.ID]}`}
+              imagem={thumbnail[produto.ID] || 'Thumbnail not available'} // Fallback text for undefined
             />
           ))}
         </div>

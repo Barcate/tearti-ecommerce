@@ -25,14 +25,14 @@ cd tearti-ecommerce
 Execute:
 
 ````sh
-cd Frond-end && npm install && cd ../Back-end && npm install && cd ..
+cd Front-end && npm install && cd ../Back-end && npm install && cd ..
 ````
 
 (Nota: Para usuarios de windows evite colocar os arquivos dentro do onedrive)
 
 ## Passo 4: Executar o Backend 
 
-Execute o terminal
+Abra sua IDE de preferença e abra o terminal dentro dela:
 
 Inicie o servidor:
 ````sh
@@ -42,7 +42,7 @@ npm start
 Para configurar o BD, acesse o arquivo [DEVELOPMENT.md](./Back-end/DEVELOPMENT.md)
 ## Passo 5: Executar o Front-end
 
-Execute o terminal
+Dentro da IDE, você precisa abrir um novo terminal e executar:
 
 Inicie o Vite.js:
 ````sh

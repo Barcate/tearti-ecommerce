@@ -17,7 +17,7 @@
     height: auto;
 }
 
-.imagem {
+.imagem, img {
     width: 100%;
     aspect-ratio: 1 / 1;
     background-color: #333;
@@ -59,4 +59,8 @@
     color: rgb(111, 172, 95);
     font-size: 2em;
     font-family: Arial, Helvetica, sans-serif;
+}
+
+.estoque, .disponivel {
+    color: #333;
 }
