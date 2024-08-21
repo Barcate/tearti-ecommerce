@@ -1,3 +1,5 @@
+/* item.css */
+
 .produto {
     width: var(--tamanho-produto);
     height: var(--tamanho-produto);
@@ -17,10 +19,9 @@
     height: auto;
 }
 
-.imagem, img {
+.imagem > img {
     width: 100%;
     aspect-ratio: 1 / 1;
-    background-color: #333;
     background-size: cover;
     background-position: center center;
     border-radius: 30px;
@@ -63,4 +64,19 @@
 
 .estoque, .disponivel {
     color: #333;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 840px) {
+    .produto {
+        align-self: center;
+    }
+
+    .nome {
+        font-size: 1em;
+    }
+
+    .preco {
+        font-size: 1.5em;
+    }
 }

@@ -1,38 +1,35 @@
-import React, { useEffect } from 'react';
+// Header.jsx
+
+import React, { useState } from 'react';
 import './header.css';
 
-const Header = () => {
-    useEffect(() => {
-        const handleScroll = () => {
-            const menu = document.getElementById('header');
-            if (window.scrollY > 735) {
-                menu.classList.add('mudaCor');
+function Header() {
+    const [menuOpen, setMenuOpen] = useState(false);
 
-            } else {
-                menu.classList.remove('mudaCor');
-            }
-        };
-
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, []);
+    const toggleMenu = () => {
+        setMenuOpen(!menuOpen);
+    };
 
     return (
         <header id="header">
             <div id="logo">
-                <div id="item1">TEARTI</div>
-                <div ><img id="item1-2"src='    '></img></div>
+                <img src="./images/logo.png" alt="Logo" />
+                <span id="logo-text">TEARTI</span>
             </div>
-            
-            <div id="item2">
-                <div id="item2-1"><a id="barrainferior" href="index.php">CARRINHO</a></div>
-                <div id="item2-2"><a id="barrainferior" href="x">PRODUTOS</a></div>
-                <div id="item2-3"><a id="barrainferior" href="x">CUSTOMIZAR</a></div>
-                <div id="item2-4"><a id="barrainferior" href="x">CONTATO</a></div>
-                <div id="item2-5"><a id="barrainferior" href="x">QUEM-SOMOS</a></div>
+            <div id="menu-toggle" onClick={toggleMenu}>
+                <span></span>
+                <span></span>
+                <span></span>
             </div>
+            <nav id="item2" className={menuOpen ? 'show' : ''}>
+                <a href="#" id="item2-1">CARRINHO</a>
+                <a href="#" id="item2-2">PRODUTOS</a>
+                <a href="#" id="item2-3">CUSTOMIZAR</a>
+                <a href="#" id="item2-4">CONTATO</a>
+                <a href="#" id="item2-5">QUEM SOMOS</a>
+            </nav>
         </header>
     );
-};
+}
 
 export default Header;
