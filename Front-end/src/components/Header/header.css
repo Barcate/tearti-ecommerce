@@ -9,7 +9,7 @@ p{
     height: 100px;
     width: 100%;
     display: grid;
-    grid-template-columns: 150px 1fr 500px;
+    grid-template-columns: 20% 1fr 60%;
     grid-template-rows: 1fr 1fr 1fr;
     align-items: center;
     text-align: center;
@@ -18,14 +18,26 @@ p{
 .mudaCor{
     background-color: #000000;
 }
-
-#item1 {
+#logo{
     grid-row: 2/3;
     grid-column: 1/2;
-    color: #CBBDAF;
-    font-size: 15px;
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-evenly;
+}
+#item1 {
+    color: #ffff;
+    font-size: 40px;
     text-align: center;
-    font-family: sans;
+    font-family: lovelo;
+
+}
+#item1-2 {
+    width: 60px;
+    height: 60px;
+    text-align: start;
+    background-size: cover;
+    background-position: center;
 }
 
 #item2 {
@@ -34,18 +46,16 @@ p{
     display: grid;
     flex-direction: row;
     align-items: center;
-    font-size: 13px;
-    
+    font-size: 20px;
     justify-content: center;
     text-decoration: none;
-    grid-template-columns: 1fr 1fr 1fr 1fr 50px;
-    grid-template-rows: 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 50px;
 }
 
 #item2-1 {
     grid-column: 1/2;
     font-family: sans;
-    color: #CBBDAF;
+    color: #ffffff;
 }
 
 #item2-2 {
@@ -58,13 +68,17 @@ p{
     font-family: sans;
 }
 #item2-4 {
-    grid-column: 4/5    ;
+    grid-column: 4/5;
+    font-family: sans;
+}
+#item2-5 {
+    grid-column: 5/6;
     font-family: sans;
 }
 
 #barrainferior {
     position: relative;
-    color: #CBBDAF;
+    color: #ffffff;
     text-decoration: none;
 }
 
@@ -102,7 +116,7 @@ p{
     height: 5px;
     bottom: 0;
     left: 0;
-    background-color: #5E17EB;
+    background-color: #7c7c7c;
     visibility: hidden;
     -webkit-transform: scaleX(0);
     transform: scaleX(0);

@@ -9,7 +9,7 @@ const App = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/produtos`);
+        const response = await fetch(`http://localhost:5000/produtos`);
         const data = await response.json();
         setProdutos(data);
         console.log("Produtos:", data);
@@ -17,7 +17,7 @@ const App = () => {
         const thumbnailsData = await Promise.all(
           data.map(async (produto) => {
             try {
-              const thumbResponse = await fetch(`http://localhost:3000/thumbnails/${produto.ID}`);
+              const thumbResponse = await fetch(`http://localhost:5000/thumbnails/${produto.ID}`);
               if (!thumbResponse.ok) {
                 throw new Error(`Failed to fetch thumbnail for product ${produto.ID}`);
               }
@@ -65,7 +65,7 @@ const App = () => {
       <section className="ondas-box">
         <div className="titulo">
           <h1>TEARTI</h1>
-          <div className="L2">PARA TI</div>
+          <div className="L2">FEITO PARA VOCê</div>
           <div className="barrinha"></div>
           <a id="a1" href="#anchor">
             <button className="Botao1">VER MAIS</button>

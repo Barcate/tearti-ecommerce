@@ -32,6 +32,10 @@ body {
     font-family: sans;
     src: url(/Fonts/Sans.otf);
 }
+@font-face {
+    font-family: lovelo;
+    src: url(/Fonts/Lovelo-Black.otf);
+}
 
 
 /* FONTESSSSSSSSSSSSSSSSSSSSSSSSSSS */
@@ -92,21 +96,21 @@ section.ondas-box{
     justify-content: center;
 }
 .titulo h1{
-    font-size: 66px;
-    font-family: sans;
-    color: #CBBDAF;
+    font-size: 100px;
+    font-family: lovelo;
+    color: rgb(255, 255, 255);
 }
 .L2{
-    font-family: sans;
+    font-family: lovelo;
     font-size: 24px;
-    color: #cbbdaf93;
+    color: #ffffffb8;
     margin-top: -5px;
 }
 .barrinha{
     height: 5px;
-    width: 65px;
+    width: 100px;
     margin-top: 10px;
-    background-color: #CBBDAF;
+    background-color: #ffffff;
     border-radius: 100px;
     align-items: center;
     text-align: center;
