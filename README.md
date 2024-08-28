@@ -1,4 +1,4 @@
-# Projeto TEARTI usando Node.js e React.js
+# Projeto TEARTI usando Node.js, React e Express
 
 Este tutorial vai te guiar através do processo de clonagem de um repositório, configuração do backend com Node.js e do frontend com Vite.
 
