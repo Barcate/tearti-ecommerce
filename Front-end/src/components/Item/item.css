@@ -3,10 +3,9 @@
 .produto {
     width: var(--tamanho-produto);
     height: var(--tamanho-produto);
-    padding: 20px;
+    padding: 10px;
     background: rgb(236, 236, 236);
     transition: .3s;
-    border-radius: 10px;
     z-index: 999;
     display: flex;
     flex-direction: column;
@@ -24,7 +23,6 @@
     aspect-ratio: 1 / 1;
     background-size: cover;
     background-position: center center;
-    border-radius: 30px;
     transition: .3s;
 }
 

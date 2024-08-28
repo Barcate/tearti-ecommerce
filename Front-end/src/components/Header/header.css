@@ -22,7 +22,7 @@
 p{
     font-family: sans;
 }
-#header {
+.header {
     position: fixed;
     top: 0;
     width: 100%;
@@ -31,6 +31,17 @@ p{
     justify-content: space-between;
     padding: 10px 20px;
     background-color: #ffffff00;
+    z-index: 1001;
+}
+.header_White{
+    position: fixed;
+    top: 0;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    background-color: #ffffff;
     z-index: 1001;
 }
 
@@ -79,6 +90,7 @@ p{
     text-decoration: none;
     font-size: 20px;
     font-family: sans;
+    text-shadow: 2px 2px rgba(255, 255, 255, 0.5);
 }
 
 #item2 a:before {

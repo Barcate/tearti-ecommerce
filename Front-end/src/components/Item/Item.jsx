@@ -10,8 +10,6 @@ const Item = (props) => {
               <div className="informacao">
                 <p className="nome">{props.name}</p>
                 <p className="preco">R${props.price}</p>
-                <p className="estoque">No estoque: {props.estoque}</p>
-                <p className="disponivel">Disponíveis: {props.disponivel}</p>
               </div>
         </div>
     );
