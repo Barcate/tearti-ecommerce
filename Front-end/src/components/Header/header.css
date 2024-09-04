@@ -129,8 +129,8 @@ p{
     #item2 {
         display: none;
         flex-direction: column;
-        position: absolute;
-        top: 80px;
+        position: fixed;
+        top: 70px;
         left: 0;
         width: 100%;
         border-radius: 50px;

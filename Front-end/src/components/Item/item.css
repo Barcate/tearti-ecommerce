@@ -1,10 +1,14 @@
 /* item.css */
-
+@font-face {
+    font-family: glacial;
+    src: url(Fonts/GlacialIndifference-Regular.otf); 
+}
 .produto {
     width: var(--tamanho-produto);
     height: var(--tamanho-produto);
     padding: 10px;
-    background: rgb(236, 236, 236);
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.5);
+    background: rgb(255, 255, 255);
     transition: .3s;
     z-index: 999;
     display: flex;
@@ -47,17 +51,17 @@
 }
 
 .nome {
-    color: #6e6e6e;
+    color: #000000;
     font-size: 1.2em;
     font-style: italic;
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
 .preco {
-    align-self: flex-end;
-    color: rgb(111, 172, 95);
-    font-size: 2em;
-    font-family: Arial, Helvetica, sans-serif;
+    align-self: flex-start;
+    color: rgb(0, 0, 0);
+    font-size: 1.5em;
+    font-family: glacial;
 }
 
 .estoque, .disponivel {
@@ -68,6 +72,11 @@
 @media screen and (max-width: 840px) {
     .produto {
         align-self: center;
+        width: 100%; /* Ajusta a largura do container ao tamanho da tela */
+        padding: 20px; /* Aumenta o padding para criar mais espaço para o texto */
+        box-sizing: border-box; /* Inclui o padding na largura total do elemento */
+        height: auto; /* Ajusta automaticamente a altura para o conteúdo */
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3); /* Ajusta a sombra para um efeito mais leve */
     }
 
     .nome {
@@ -75,6 +84,28 @@
     }
 
     .preco {
-        font-size: 1.5em;
+        font-size: 1.2em; /* Ajusta o tamanho da fonte para caber melhor */
+    }
+
+    /* Exibir informações sem hover na versão responsiva */
+    .informacao {
+        visibility: visible;
+        opacity: 1;
+        position: initial;
+    }
+
+    /* Sobrescrevendo todos os efeitos de hover */
+    .produto:hover {
+        height: auto; /* Mantém a altura padrão */
+    }
+
+    .produto:hover > .imagem {
+        border-radius: 0; /* Remove o efeito de borda arredondada no hover */
+    }
+
+    .produto:hover > .informacao {
+        visibility: visible;
+        opacity: 1;
+        position: initial;
     }
 }

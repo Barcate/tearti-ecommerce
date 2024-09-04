@@ -1,0 +1,198 @@
+:root {
+  --tamanho-produto: 350px;
+}
+
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  width: 100vw;
+  height: 100%;
+  margin: 0 auto;
+  max-width: 100%;
+  overflow-x: hidden;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  background-color: transparent;
+  background-image: url(/images/BG.png);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+}
+
+
+/* FONTESSSSSSSSSSSSSSSSSSSSSSSSSSS */
+
+@font-face {
+  font-family: sans;
+  src: url(/Fonts/Sans.otf);
+}
+@font-face {
+  font-family: lovelo;
+  src: url(/Fonts/Lovelo-Black.otf);
+}
+
+
+/* FONTESSSSSSSSSSSSSSSSSSSSSSSSSSS */
+
+head {
+  border: none;
+  overflow: hidden;
+}
+section.ondas-box{
+  width: 100%;
+  height: 100vh;
+}
+.onda{
+  width: 100vw;
+  height: 100px;
+  position: absolute;
+  bottom: 0;
+  background-image: url(/images/ondas.png);
+  background-size: 1000px 100px;
+
+  animation: ondaAnimada 5s ease-in-out infinite alternate;
+}
+#onda1{
+  z-index: 800;
+  opacity: 1;
+  background-position-x: 400px;
+}
+#onda2{
+  z-index: 799;
+  opacity: 0.5;
+  background-position-x: 300px;
+}
+#onda3{
+  z-index: 798;
+  opacity: 0.2;
+  background-position-x: 200px;
+}
+#onda4{
+  z-index: 797;
+  opacity: 0.8;
+  background-position-x: 100px;
+}
+@keyframes ondaAnimada{
+  0%{
+      transform: translateY(0px);
+  }
+  100%{
+      transform: translateY(25px);
+  }
+}
+.titulo{
+  height: 100%;
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.titulo h1{
+  font-size: 100px;
+  font-family: lovelo;
+  color: rgb(0, 0, 0);
+}
+.L2{
+  font-family: lovelo;
+  font-size: 24px;
+  color: #000000d7;
+  margin-top: -5px;
+}
+.barrinha{
+  height: 5px;
+  width: 100px;
+  margin-top: 10px;
+  background-color: #000000cd;
+  border-radius: 100px;
+  align-items: center;
+  text-align: center;
+}
+.Botao1{
+  width: 150px;
+  height: 45px;
+  margin-top: 20px;
+  border-radius: 10rem;
+  color: #ffffff;
+  text-transform: uppercase;
+  background-color: #000000;
+  font-size: 15px;
+  font-family: sans;
+  transition: all .3s;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  text-decoration: none;
+  border: none;
+}
+.Botao1:after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 10rem;
+  z-index: -2;
+}
+.Botao1:before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0%;
+  height: 100%;
+  background-color: #efeae6;
+  transition: all .3s;
+  border-radius: 10rem;
+  z-index: -1;
+  text-decoration: none;
+}
+.Botao1:hover {
+  color: #000000;
+  &:before {
+  width: 100%;
+  }
+}
+.conteudo {
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  padding-bottom: 100px;
+  padding-top: 100px;
+}
+
+.container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, var(--tamanho-produto));
+  grid-gap: 50px;
+  justify-content: center;
+  width: 90vw;
+}
+@media screen and (max-width: 840px) {
+  .container {
+      grid-template-columns: repeat(auto-fit, var(--tamanho-produto));
+      width: 1;
+  }
+
+  .titulo h1 {
+      font-size: 90px;
+  }
+  .l2{
+      font-size: 14px;
+  }
+  .Botao1 {
+      width: 130px;
+      height: 45px;
+  }
+  .barrinha{
+      height: 5px;
+      width: 90px;
+  }
+}
