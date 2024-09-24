@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import './Home.css'; // Importa o CSS específico para a página Home
 import Item from '../../components/Item/Item';
+import { useNavigate } from 'react-router-dom'; // Importa o hook de navegação
+
 const Home = () => {
   const [produto, setProdutos] = useState([]);
   const [thumbnail, setThumbnails] = useState({});
+  const navigate = useNavigate(); // Inicializa o hook para navegar entre páginas
 
   useEffect(() => {
     const fetchData = async () => {
@@ -46,6 +49,11 @@ const Home = () => {
     fetchData();
   }, []);
 
+  // Função para capturar o clique e redirecionar para a página do produto
+  const handleProductClick = (id) => {
+    navigate(`/produto/${id}`); // Redireciona para a URL com o ID do produto
+  };
+
   return (
     <div>
       <section className="ondas-box">
@@ -64,18 +72,24 @@ const Home = () => {
       </section>
       <section className="conteudo">
         <div className="container">
-          {produto.map(produto => (
-            <Item
+          {produto.map((produto) => (
+            <div
               key={produto.ID}
-              itemKey={produto.ID}
-              name={produto.NOME}
-              price={produto.PRECO}
-              estoque={produto.ESTOQUE}
-              disponivel={produto.DISPONIVEL}
-              imagem={thumbnail[produto.ID] || 'Thumbnail not available'}
-            />
+              onClick={() => handleProductClick(produto.ID)} // Função que captura o clique no produto
+              style={{ cursor: 'pointer' }} // Estilo para indicar que o item é clicável
+            >
+              <Item
+                itemKey={produto.ID}
+                name={produto.NOME}
+                price={produto.PRECO}
+                estoque={produto.ESTOQUE}
+                disponivel={produto.DISPONIVEL}
+                imagem={thumbnail[produto.ID] || 'Thumbnail not available'}
+              />
+            </div>
           ))}
         </div>
+        <div id="anchor"></div>
       </section>
     </div>
   );

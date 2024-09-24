@@ -34,7 +34,7 @@ function Header({ alwaysWhite }) {
         <header className={headerClass}>
             <div id="logo">
                 <img src="./images/logo.png" alt="Logo" />
-                <span id="logo-text">TEARTI</span>
+                <a href="/" id="logo-text">TEARTI</a>
             </div>
             <div id="menu-toggle" onClick={toggleMenu}>
                 <span></span>
@@ -42,8 +42,8 @@ function Header({ alwaysWhite }) {
                 <span></span>
             </div>
             <nav id="item2" className={menuOpen ? 'show' : ''}>
-                <a href="#" id="item2-1">CARRINHO</a>
-                <a href="#" id="item2-2">PRODUTOS</a>
+                <a href="/carrinho" id="item2-1">CARRINHO</a>
+                <a href="/" id="item2-2">PRODUTOS</a>
                 <a href="#" id="item2-3">CUSTOMIZAR</a>
                 <a href="#" id="item2-4">CONTATO</a>
                 <a href="#" id="item2-5">QUEM SOMOS</a>

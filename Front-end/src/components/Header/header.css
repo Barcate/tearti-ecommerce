@@ -83,7 +83,9 @@ p{
     align-items: center;
     gap: 30px;
 }
-
+a{
+    text-decoration: none;
+}
 #item2 a {
     position: relative;
     color: #000;

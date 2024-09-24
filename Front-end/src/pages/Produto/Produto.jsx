@@ -1,55 +1,84 @@
-import React from 'react';
-import './Produto.css';
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import './Produto.css'; // CSS específico para a página do Produto
 
 const Produto = () => {
-  // Dados fixos do produto
-  const produto = {
-    id: 1,
-    nome: "Porta Copos Liso Branco",
-    preco: 11,
-    precoAntigo: 16,
-    desconto: 30,
-    estoque: 4,
-    descricao: "Porta Copos com fio de malha branco produzido artesanalmente em tear.",
-    especificacoes: "Material: Fio de Malha Ecológico Trapillo da Círculo 94% poliéster e 6% elastano. Medidas aproximadas: 10,5 x 10,5 cm. Lavável e reutilizável.",
-    imagens: [
-      "https://via.placeholder.com/150",
-      "https://via.placeholder.com/150",
-      "https://via.placeholder.com/150"
-    ]
+  const { id } = useParams();
+  const [produto, setProduto] = useState(null);
+  const [thumbnail, setThumbnail] = useState('');
+  const [quantidade, setQuantidade] = useState(1); // Estado para a quantidade
+
+  useEffect(() => {
+    const fetchProduto = async () => {
+      try {
+        const response = await fetch(`http://localhost:5000/produtos/${id}`);
+        const data = await response.json();
+        setProduto(data);
+
+        const thumbResponse = await fetch(`http://localhost:5000/thumbnails/${id}`);
+        const thumbData = await thumbResponse.json();
+        setThumbnail(thumbData.BASE64);
+      } catch (error) {
+        console.error('Error fetching product:', error);
+      }
+    };
+
+    fetchProduto();
+  }, [id]);
+
+  // Função para aumentar a quantidade
+  const aumentarQuantidade = () => {
+    if (quantidade < produto.ESTOQUE) {
+      setQuantidade(quantidade + 1);
+    }
   };
+
+  // Função para diminuir a quantidade
+  const diminuirQuantidade = () => {
+    if (quantidade > 1) {
+      setQuantidade(quantidade - 1);
+    }
+  };
+
+  // Função para adicionar ao carrinho
+  const adicionarAoCarrinho = () => {
+    // Aqui você pode adicionar a lógica para adicionar o produto ao carrinho
+    console.log(`Adicionando ${quantidade} de ${produto.NOME} ao carrinho.`);
+  };
+
+  if (!produto) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="produto-container">
-      <div className="produto-imagens">
-        {produto.imagens.map((imagem, index) => (
-          <img
-            key={index}
-            src={imagem}
-            alt={`Imagem ${index + 1}`}
-            className="produto-imagem-miniatura"
-          />
-        ))}
-      </div>
       <div className="produto-detalhes">
-        <h2 className="produto-titulo">{produto.nome}</h2>
-        <div className="produto-preco">
-          <span>R$ {produto.preco}</span>
-          <span className="produto-preco-antigo">R$ {produto.precoAntigo}</span>
-          <span className="produto-desconto">-{produto.desconto}%</span>
+        <div className="produto-foto">
+          <img src={thumbnail} alt={produto.NOME} />
         </div>
-        <p className="produto-disponibilidade">
-          Disponíveis: {produto.estoque} unidades
-        </p>
-        <p className="produto-descricao">{produto.descricao}</p>
-        <div className="produto-especificacoes">
-          <strong>Especificações do Produto:</strong>
-          <p>{produto.especificacoes}</p>
+        <div className="produto-informacoes">
+          <h1>{produto.NOME}</h1>
+          <div className="preco">
+            R${produto.PRECO.toFixed(2)}
+            <span className="desconto">R$16.00</span> {/* Exemplo de preço anterior */}
+            <span className="desconto-porcentagem">-30%</span>
+          </div>
+          <p>{produto.DESCRICAO}</p>
+          <p>Estoque: {produto.ESTOQUE}</p>
+          <p>{produto.DISPONIVEL ? 'Disponível' : 'Indisponível'}</p>
+
+          {/* Controles de quantidade */}
+          <div className="controle-quantidade">
+            <button onClick={diminuirQuantidade} disabled={quantidade <= 1}>-</button>
+            <span>{quantidade}</span>
+            <button onClick={aumentarQuantidade} disabled={quantidade >= produto.ESTOQUE}>+</button>
+          </div>
+
+          <button className="adicionar-carrinho" onClick={adicionarAoCarrinho}>Adicionar ao Carrinho</button>
         </div>
-        <button className="produto-botao-comprar">Adicionar ao Carrinho</button>
       </div>
     </div>
   );
 };
 
-export default App;
+export default Produto;
