@@ -137,4 +137,23 @@ expressApp.post('/usuarios', async (request, response) => {
     }
 })
 
+expressApp.get('/usuarios/me', verificarToken, async (request, response) => {
+    try {
+        const usuario = await getUsuarioPorEmail(request.usuario.email); // Busca o usuário no banco de dados pelo email
+
+        if (!usuario) {
+            return response.status(404).json({ error: 'Usuário não encontrado!' });
+        }
+
+        // Retorna as informações do usuário (exceto a senha)
+        response.json({
+            id: usuario.id,
+            nome: usuario.nome,
+            email: usuario.email
+        });
+    } catch (error) {
+        response.status(500).json({ error: error.message });
+    }
+});
+
 module.exports = expressApp

@@ -21,23 +21,18 @@ db.serialize(() => {
   db.run(`CREATE TABLE Thumbnail (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     base64 TEXT NOT NULL,
-    produtoId INTEGER,
-    FOREIGN KEY(produtoId) REFERENCES Produto(ID)
+    produtoId INTEGER NOT NULL,
+    FOREIGN KEY(produtoId) REFERENCES Produto(id)
   )`)
 
   db.run(`CREATE TABLE Review (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     texto TEXT NOT NULL,
     avaliacao INTEGER NOT NULL,
-    usuarioId INTEGER,
-    produtoId INTEGER,
-    FOREIGN KEY(usuarioId) REFERENCES Usuario(ID),
-    FOREIGN KEY(produtoId) REFERENCES Produto(ID)
-  )`)
-
-  db.run(`CREATE TABLE CarrinhoDeCompras (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    total REAL NOT NULL
+    usuarioId INTEGER NOT NULL,
+    produtoId INTEGER NOT NULL,
+    FOREIGN KEY(usuarioId) REFERENCES Usuario(id),
+    FOREIGN KEY(produtoId) REFERENCES Produto(id)
   )`)
 
   db.run(`CREATE TABLE ItemCarrinho (
@@ -45,9 +40,9 @@ db.serialize(() => {
     quantidade INTEGER NOT NULL,
     preco REAL NOT NULL,
     produtoId INTEGER,
-    carrinhoId INTEGER,
-    FOREIGN KEY(produtoId) REFERENCES Produto(ID),
-    FOREIGN KEY(carrinhoId) REFERENCES CarrinhoDeCompras(ID)
+    usuarioId INTEGER,
+    FOREIGN KEY(produtoId) REFERENCES Produto(id),
+    FOREIGN KEY(usuarioId) REFERENCES Usuario(id)
   )`)
 
   console.log('Tabelas criadas com sucesso!')

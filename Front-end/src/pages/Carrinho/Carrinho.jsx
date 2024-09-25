@@ -4,19 +4,35 @@ import { useNavigate } from 'react-router-dom';
 
 const Carrinho = () => {
   const navigate = useNavigate();
+  const [name, setName] = useState('Visitante');
 
   useEffect(() => {
     const token = localStorage.getItem('token');
 
     if (!token) {
       navigate('/login')
+    } else {
+      const response = fetch('http://localhost:5000/usuarios/me', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      }).then(async (response) => {
+        const data = await response.json()
+
+        if (response.ok) {
+          setName(data.nome)
+        } else {
+          localStorage.clear();
+        }
+      })
     }
   }, [navigate]);
 
   // Estado para os itens do carrinho (exemplo de dados)
   const [itensCarrinho, setItensCarrinho] = useState([
-    { id: 1, nome: 'Cachecol de Lã', preco: 49.99, quantidade: 2, imagem: 'url_da_imagem_1' },
-    { id: 2, nome: 'Camiseta Básica', preco: 29.99, quantidade: 1, imagem: 'url_da_imagem_2' },
+    // { id: 1, nome: 'Cachecol de Lã', preco: 49.99, quantidade: 2, imagem: 'url_da_imagem_1' },
+    // { id: 2, nome: 'Camiseta Básica', preco: 29.99, quantidade: 1, imagem: 'url_da_imagem_2' },
     // Adicione mais itens conforme necessário
   ]);
 
@@ -43,7 +59,7 @@ const Carrinho = () => {
     <div className="carrinho-container">
       <h1>Carrinho de Compras</h1>
       <div>
-        Olá, João!
+        Olá, {name}!
         <button onClick={handleLogout}>Sair</button>
       </div>
       {itensCarrinho.length === 0 ? (
@@ -63,7 +79,7 @@ const Carrinho = () => {
           ))}
           <div className="total-container">
             <h2>Total: R${calcularTotal()}</h2>
-            <button className="whatsapp-button" onClick={gerarMensagemWhatsApp}>Finalizar no WhatsApp</button>
+            <button className="whatsapp-button" onClick={gerarMensagemWhatsApp}>Finalizar compra</button>
           </div>
         </div>
       )}
