@@ -226,6 +226,67 @@ async function verificarLogin(email, senha) {
   }
 }
 
+async function createItemCarrinho(quantidade, produtoId, usuarioId) {
+  try {
+    const result = await runQuery(
+      `INSERT INTO ItemCarrinho (quantidade, produtoId, usuarioId) VALUES (?, ?, ?)`,
+      [quantidade, produtoId, usuarioId]
+    );
+    console.log(`ItemCarrinho criado com ID: ${result.lastID}`);
+    return result.lastID;
+  } catch (err) {
+    console.error(err.message);
+  }
+}
+
+async function getItensCarrinho(usuarioId) {
+  try {
+    const rows = await getQueryAll(
+      `SELECT c.id, c.quantidade, p.nome, p.descricao, p.preco, p.estoque, p.disponivel, t.base64 FROM ItemCarrinho c, Produto p, Thumbnail t WHERE c.usuarioId = ? AND p.id = c.produtoId AND t.produtoId = p.id`,
+      [usuarioId]
+    );
+    console.log(rows);
+    return rows;
+  } catch (err) {
+    console.error(err.message);
+  }
+}
+
+async function updateItemCarrinho(id, quantidade, preco, produtoId) {
+  try {
+    await runQuery(
+      `UPDATE ItemCarrinho SET quantidade = ?, produtoId = ? WHERE id = ?`,
+      [quantidade, produtoId, id]
+    );
+    console.log(`ItemCarrinho atualizado com ID: ${id}`);
+  } catch (err) {
+    console.error(err.message);
+  }
+}
+
+async function deleteItemCarrinho(id) {
+  try {
+    await runQuery(`DELETE FROM ItemCarrinho WHERE id = ?`, [id]);
+    console.log(`ItemCarrinho deletado com ID: ${id}`);
+  } catch (err) {
+    console.error(err.message);
+  }
+}
+
+async function isItemCarrinhoDoUsuario(itemId, usuarioId) {
+  try {
+    console.log(itemId, usuarioId)
+    const row = await getQuery(
+      `SELECT * FROM ItemCarrinho WHERE id = ? AND usuarioId = ?`,
+      [itemId, usuarioId]
+    );
+    return !!row; // Retorna verdadeiro se encontrar o item
+  } catch (err) {
+    console.error(err.message);
+    return false;
+  }
+}
+
 module.exports = {
   createProduto,
   getProduto,
@@ -244,5 +305,10 @@ module.exports = {
   deleteUsuario,
   getUsuarioPorEmail,
   getUsuarioPorNome,
-  verificarLogin
+  verificarLogin,
+  createItemCarrinho,
+  getItensCarrinho,
+  updateItemCarrinho,
+  deleteItemCarrinho,
+  isItemCarrinhoDoUsuario
 }

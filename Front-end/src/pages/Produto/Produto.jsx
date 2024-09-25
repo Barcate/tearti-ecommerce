@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import './Produto.css'; // CSS específico para a página do Produto
 
 const Produto = () => {
@@ -7,6 +7,7 @@ const Produto = () => {
   const [produto, setProduto] = useState(null);
   const [thumbnail, setThumbnail] = useState('');
   const [quantidade, setQuantidade] = useState(1); // Estado para a quantidade
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProduto = async () => {
@@ -44,6 +45,53 @@ const Produto = () => {
   const adicionarAoCarrinho = () => {
     // Aqui você pode adicionar a lógica para adicionar o produto ao carrinho
     console.log(`Adicionando ${quantidade} de ${produto.nome} ao carrinho.`);
+
+    const token = localStorage.getItem('token');
+    let isValid = true;
+
+    if (!token) {
+      navigate('/login');
+      isValid = false;
+    } else {
+      fetch('http://localhost:5000/usuarios/me', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      }).then(async (response) => {
+        // const data = await response.json();
+
+        if (!response.ok) {
+          localStorage.clear();
+          isValid = false;
+          navigate('/login');
+        }
+      })
+    }
+    
+    if (!isValid) return
+    fetch(`http://localhost:5000/carrinho`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        quantidade,
+        produtoId: id
+      })
+    }).then(async (response) => {
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error);
+      } else {
+        alert('Item adicionado com sucesso!')
+        navigate('/')
+      }
+    }).catch((error) => {
+      alert(error.message)
+    });
   };
 
   if (!produto) {
@@ -60,8 +108,8 @@ const Produto = () => {
           <h1>{produto.nome}</h1>
           <div className="preco">
             R${produto.preco.toFixed(2)}
-            <span className="desconto">R$16.00</span> {/* Exemplo de preço anterior */}
-            <span className="desconto-porcentagem">-30%</span>
+            {/* <span className="desconto">R$16.00</span>
+            <span className="desconto-porcentagem">-30%</span> */}
           </div>
           <p>{produto.descricao}</p>
           <p>Estoque: {produto.estoque}</p>

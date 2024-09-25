@@ -130,6 +130,7 @@ section.ondas-box{
   z-index: 1;
   text-decoration: none;
   border: none;
+  cursor: pointer;
 }
 .Botao1:after {
   content: '';

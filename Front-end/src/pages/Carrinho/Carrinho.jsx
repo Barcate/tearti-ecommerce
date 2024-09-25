@@ -5,36 +5,53 @@ import { useNavigate } from 'react-router-dom';
 const Carrinho = () => {
   const navigate = useNavigate();
   const [name, setName] = useState('Visitante');
+  // Estado para os itens do carrinho (exemplo de dados)
+  const [itensCarrinho, setItensCarrinho] = useState([]);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
 
     if (!token) {
-      navigate('/login')
+      navigate('/login');
     } else {
-      const response = fetch('http://localhost:5000/usuarios/me', {
+      fetch('http://localhost:5000/usuarios/me', {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`
         }
       }).then(async (response) => {
-        const data = await response.json()
+        const data = await response.json();
 
         if (response.ok) {
-          setName(data.nome)
+          setName(data.nome);
+          fetchCarrinho(token);
         } else {
           localStorage.clear();
+          navigate('/login');
         }
       })
     }
   }, [navigate]);
 
-  // Estado para os itens do carrinho (exemplo de dados)
-  const [itensCarrinho, setItensCarrinho] = useState([
-    // { id: 1, nome: 'Cachecol de Lã', preco: 49.99, quantidade: 2, imagem: 'url_da_imagem_1' },
-    // { id: 2, nome: 'Camiseta Básica', preco: 29.99, quantidade: 1, imagem: 'url_da_imagem_2' },
-    // Adicione mais itens conforme necessário
-  ]);
+  function fetchCarrinho(token) {
+    fetch('http://localhost:5000/carrinho', {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    }).then(async (response) => {
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error);
+      } else {
+        setItensCarrinho(data);
+        console.log(data);
+      }
+    }).catch((error) => {
+      alert(error.message)
+    })
+  }
 
   // Função para gerar mensagem para WhatsApp
   const gerarMensagemWhatsApp = () => {
@@ -55,6 +72,29 @@ const Carrinho = () => {
     navigate('/')
   }
 
+  const handleRemoverItemCarrinho = (produtoId) => {
+    const token = localStorage.getItem('token');
+
+    fetch(`http://localhost:5000/carrinho/${produtoId}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
+      .then(async (response) => {
+        if (!response.ok) {
+          const data = await response.json();
+          throw new Error(data.error);
+        }
+
+        // Se o item foi removido com sucesso, atualize o estado
+        setItensCarrinho(itensCarrinho.filter(item => item.id !== produtoId));
+      })
+      .catch((error) => {
+        alert(error.message);
+      });
+  }
+
   return (
     <div className="carrinho-container">
       <h1>Carrinho de Compras</h1>
@@ -68,13 +108,13 @@ const Carrinho = () => {
         <div className="itens-carrinho">
           {itensCarrinho.map(item => (
             <div key={item.id} className="item">
-              <img src={item.imagem} alt={item.nome} className="item-imagem" />
+              <img src={item.base64} alt={item.nome} className="item-imagem" />
               <div className="item-detalhes">
                 <span className="item-nome">{item.nome}</span>
                 <span className="item-preco">R${item.preco.toFixed(2)}</span>
                 <span className="item-quantidade">Quantidade: {item.quantidade}</span>
               </div>
-              <button className="remove-item" onClick={() => {/* Lógica para remover item */}}>🗑️</button>
+              <button className="remove-item" onClick={() => handleRemoverItemCarrinho(item.id)}>🗑️</button>
             </div>
           ))}
           <div className="total-container">

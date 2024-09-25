@@ -11,7 +11,12 @@ const {
     createUsuario,
     getUsuarioPorEmail,
     getUsuarioPorNome,
-    verificarLogin
+    verificarLogin,
+    createItemCarrinho,
+    getItensCarrinho,
+    updateItemCarrinho,
+    deleteItemCarrinho,
+    isItemCarrinhoDoUsuario
 } = require('./database')
 
 const expressApp = express()
@@ -25,20 +30,20 @@ expressApp.get('/status', (request, response) => {
 
 // Middleware para verificar o token JWT
 function verificarToken(request, response, next) {
-    const authHeader = request.headers['authorization']
-    const token = authHeader && authHeader.split(' ')[1]
+    const authHeader = request.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
 
     if (!token) {
-        return response.status(401).json({ error: 'Token de autenticação não fornecido!' })
+        return response.status(401).json({ error: 'Token de autenticação não fornecido!' });
     }
 
     jwt.verify(token, process.env.JWT_SECRET, (err, usuario) => {
         if (err) {
-            return response.status(403).json({ error: 'Token inválido!' })
+            return response.status(403).json({ error: 'Token inválido!' });
         }
 
-        request.usuario = usuario
-        next()
+        request.usuario = usuario;
+        next();
     })
 }
 
@@ -151,6 +156,66 @@ expressApp.get('/usuarios/me', verificarToken, async (request, response) => {
             nome: usuario.nome,
             email: usuario.email
         });
+    } catch (error) {
+        response.status(500).json({ error: error.message });
+    }
+});
+
+expressApp.post('/carrinho', verificarToken, async (request, response) => {
+    const { quantidade, produtoId } = request.body;
+    const usuarioId = request.usuario.id; // ID do usuário autenticado
+    try {
+        const id = await createItemCarrinho(quantidade, produtoId, usuarioId);
+        response.status(201).json({ id });
+        console.log('hellooo!')
+    } catch (error) {
+        response.status(500).json({ error: error.message });
+    }
+});
+
+expressApp.get('/carrinho', verificarToken, async (request, response) => {
+    const usuarioId = request.usuario.id; // ID do usuário autenticado
+    try {
+        const itens = await getItensCarrinho(usuarioId);
+        response.json(itens);
+    } catch (error) {
+        response.status(500).json({ error: error.message });
+    }
+});
+
+// Rota para atualizar um item do carrinho
+expressApp.put('/carrinho/:id', verificarToken, async (request, response) => {
+    const { id } = request.params;
+    const { quantidade, produtoId } = request.body;
+    const usuarioId = request.usuario.id; // ID do usuário autenticado
+
+    // Verificar se o item pertence ao usuário
+    const isDoUsuario = await isItemCarrinhoDoUsuario(id, usuarioId);
+    if (!isDoUsuario) {
+        return response.status(403).json({ error: 'Acesso negado. Este item não pertence ao usuário.' });
+    }
+
+    try {
+        await updateItemCarrinho(id, quantidade, produtoId);
+        response.status(200).json({ message: 'Item atualizado com sucesso!' });
+    } catch (error) {
+        response.status(500).json({ error: error.message });
+    }
+});
+
+expressApp.delete('/carrinho/:id', verificarToken, async (request, response) => {
+    const { id } = request.params;
+    const usuarioId = request.usuario.id; // ID do usuário autenticado
+
+    // Verificar se o item pertence ao usuário
+    const isDoUsuario = await isItemCarrinhoDoUsuario(id, usuarioId);
+    if (!isDoUsuario) {
+        return response.status(403).json({ error: 'Acesso negado. Este item não pertence ao usuário.' });
+    }
+
+    try {
+        await deleteItemCarrinho(id);
+        response.status(200).json({ message: 'Item removido com sucesso!' });
     } catch (error) {
         response.status(500).json({ error: error.message });
     }

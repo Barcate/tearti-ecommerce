@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import './Home.css'; // Importa o CSS específico para a página Home
 import Item from '../../components/Item/Item';
 import { useNavigate } from 'react-router-dom'; // Importa o hook de navegação
@@ -7,6 +7,7 @@ const Home = () => {
   const [produto, setProdutos] = useState([]);
   const [thumbnail, setThumbnails] = useState({});
   const navigate = useNavigate(); // Inicializa o hook para navegar entre páginas
+  const myRef = useRef();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -54,6 +55,10 @@ const Home = () => {
     navigate(`/produto/${id}`); // Redireciona para a URL com o ID do produto
   };
 
+  const handleScroll = (ref) => {
+    ref.current.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
     <div>
       <section className="ondas-box">
@@ -61,9 +66,7 @@ const Home = () => {
           <h1>TEARTI</h1>
           <div className="L2">FEITO PARA VOCÊ</div>
           <div className="barrinha"></div>
-          <a id="a1" href="#anchor">
-            <button className="Botao1">VER MAIS</button>
-          </a>
+          <button className="Botao1" onClick={() => handleScroll(myRef)}>VER MAIS</button>
         </div>
         <div className="onda" id="onda1"></div>
         <div className="onda" id="onda2"></div>
@@ -71,7 +74,7 @@ const Home = () => {
         <div className="onda" id="onda4"></div>
       </section>
       <section className="conteudo">
-        <div className="container">
+        <div className="container" ref={myRef}>
           {produto.map((produto) => (
             <div
               key={produto.id}

@@ -38,7 +38,6 @@ db.serialize(() => {
   db.run(`CREATE TABLE ItemCarrinho (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     quantidade INTEGER NOT NULL,
-    preco REAL NOT NULL,
     produtoId INTEGER,
     usuarioId INTEGER,
     FOREIGN KEY(produtoId) REFERENCES Produto(id),
