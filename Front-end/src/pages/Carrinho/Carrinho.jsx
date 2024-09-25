@@ -1,7 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Carrinho.css'; // CSS específico para a página Carrinho
+import { useNavigate } from 'react-router-dom';
 
 const Carrinho = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      navigate('/login')
+    }
+  }, [navigate]);
+
   // Estado para os itens do carrinho (exemplo de dados)
   const [itensCarrinho, setItensCarrinho] = useState([
     { id: 1, nome: 'Cachecol de Lã', preco: 49.99, quantidade: 2, imagem: 'url_da_imagem_1' },
@@ -23,9 +34,18 @@ const Carrinho = () => {
     return itensCarrinho.reduce((total, item) => total + (item.preco * item.quantidade), 0).toFixed(2);
   };
 
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate('/')
+  }
+
   return (
     <div className="carrinho-container">
       <h1>Carrinho de Compras</h1>
+      <div>
+        Olá, João!
+        <button onClick={handleLogout}>Sair</button>
+      </div>
       {itensCarrinho.length === 0 ? (
         <p>Seu carrinho está vazio.</p>
       ) : (

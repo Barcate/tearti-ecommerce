@@ -62,14 +62,14 @@ async function main() {
     ];
 
     // Insert products into the Produto table
-    const stmtProduto = db.prepare(`INSERT INTO Produto (NOME, DESCRICAO, PRECO, ESTOQUE, DISPONIVEL) VALUES (?, ?, ?, ?, ?)`);
+    const stmtProduto = db.prepare(`INSERT INTO Produto (nome, descricao, preco, estoque, disponivel) VALUES (?, ?, ?, ?, ?)`);
     produtos.forEach(produto => {
       stmtProduto.run(produto.nome, produto.descricao, produto.preco, produto.estoque, produto.disponivel);
     });
     stmtProduto.finalize();
 
     // Insert images into the Thumbnail table
-    const stmtThumbnail = db.prepare(`INSERT INTO Thumbnail (BASE64, ProdutoID) VALUES (?, ?)`);
+    const stmtThumbnail = db.prepare(`INSERT INTO Thumbnail (base64, produtoId) VALUES (?, ?)`);
     imageList.forEach((imgSrc, index) => {
       stmtThumbnail.run(imgSrc, index + 1); // Assuming ProdutoID is the index + 1
     });

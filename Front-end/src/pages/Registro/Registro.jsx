@@ -6,15 +6,34 @@ const Registro = () => {
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
+  const [error, setError] = useState(null);
   const navigate = useNavigate(); // Hook para navegação
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Lógica para registro (substituir por sua lógica real)
-    console.log('Nome:', nome);
-    console.log('Email:', email);
-    console.log('Senha:', senha);
-    // Redirecionar ou mostrar mensagem de sucesso
+    
+    if (!nome.trim() || !email.trim() || !senha) return;
+
+    fetch('http://localhost:5000/usuarios', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ nome, email, senha })
+    }).then(async (response) => {
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Algo deu errado!');
+      }
+
+      return data;
+    }).then((data) => {
+      alert('A sua conta foi criada com sucesso!')
+      navigate('/login');
+    }).catch((error) => {
+      setError(error.message);
+    })
   };
 
   return (
@@ -28,7 +47,8 @@ const Registro = () => {
             id="nome" 
             value={nome} 
             onChange={(e) => setNome(e.target.value)} 
-            required 
+            required
+            autoComplete='off'
           />
         </div>
         <div className="input-container">
@@ -38,7 +58,8 @@ const Registro = () => {
             id="email" 
             value={email} 
             onChange={(e) => setEmail(e.target.value)} 
-            required 
+            required
+            autoComplete='off'
           />
         </div>
         <div className="input-container">
@@ -48,9 +69,11 @@ const Registro = () => {
             id="senha" 
             value={senha} 
             onChange={(e) => setSenha(e.target.value)} 
-            required 
+            required
+            autoComplete='off'
           />
         </div>
+        {error && <div className="error-message">{error}</div>}
         <button type="submit" className="register-button">Registrar</button>
       </form>
       <button className="back-to-login-button" onClick={() => navigate('/login')}>

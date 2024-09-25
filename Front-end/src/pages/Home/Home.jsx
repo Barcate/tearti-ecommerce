@@ -19,16 +19,16 @@ const Home = () => {
         const thumbnailsData = await Promise.all(
           data.map(async (produto) => {
             try {
-              const thumbResponse = await fetch(`http://localhost:5000/thumbnails/${produto.ID}`);
+              const thumbResponse = await fetch(`http://localhost:5000/thumbnails/${produto.id}`);
               if (!thumbResponse.ok) {
-                throw new Error(`Failed to fetch thumbnail for product ${produto.ID}`);
+                throw new Error(`Failed to fetch thumbnail for product ${produto.id}`);
               }
               const thumbData = await thumbResponse.json();
-              console.log(`Thumbnail for ${produto.ID}:`, thumbData);
-              return { id: produto.ID, thumbnail: thumbData.BASE64 || 'No thumbnail text' };
+              // console.log(`Thumbnail for ${produto.id}:`, thumbData);
+              return { id: produto.id, thumbnail: thumbData.base64 || 'No thumbnail text' };
             } catch (error) {
-              console.error(`Error fetching thumbnail for product ${produto.ID}:`, error);
-              return { id: produto.ID, thumbnail: 'Error fetching thumbnail' };
+              console.error(`Error fetching thumbnail for product ${produto.id}:`, error);
+              return { id: produto.id, thumbnail: 'Error fetching thumbnail' };
             }
           })
         );
@@ -40,7 +40,7 @@ const Home = () => {
           return acc;
         }, {});
 
-        console.log("Thumbnails Object:", thumbnailsObject);
+        // console.log("Thumbnails Object:", thumbnailsObject);
         setThumbnails(thumbnailsObject);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -74,17 +74,17 @@ const Home = () => {
         <div className="container">
           {produto.map((produto) => (
             <div
-              key={produto.ID}
-              onClick={() => handleProductClick(produto.ID)} // Função que captura o clique no produto
+              key={produto.id}
+              onClick={() => handleProductClick(produto.id)} // Função que captura o clique no produto
               style={{ cursor: 'pointer' }} // Estilo para indicar que o item é clicável
             >
               <Item
-                itemKey={produto.ID}
-                name={produto.NOME}
-                price={produto.PRECO}
-                estoque={produto.ESTOQUE}
-                disponivel={produto.DISPONIVEL}
-                imagem={thumbnail[produto.ID] || 'Thumbnail not available'}
+                itemKey={produto.id}
+                name={produto.nome}
+                price={produto.preco}
+                estoque={produto.estoque}
+                disponivel={produto.disponivel}
+                imagem={thumbnail[produto.id] || 'Thumbnail not available'}
               />
             </div>
           ))}

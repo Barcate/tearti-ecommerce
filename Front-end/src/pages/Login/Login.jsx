@@ -1,18 +1,43 @@
 import React, { useState } from 'react';
 import './Login.css'; // CSS específico para a página de Login
-import { useNavigate } from 'react-router-dom'; // Substituindo useHistory por useNavigate
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
+  const [error, setError] = useState(null); // Estado para armazenar erros
   const navigate = useNavigate(); // Hook para navegação
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Lógica para autenticação (substituir por sua lógica real)
-    console.log('Email:', email);
-    console.log('Senha:', senha);
-    // Redirecionar ou mostrar mensagem de sucesso
+    setError(null); // Limpar o erro antes de tentar o login
+
+    if (!email.trim() || !senha) return;
+
+    // Fazendo a requisição para a API de login
+    try {
+      const response = await fetch('http://localhost:5000/usuarios/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, senha }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Erro no login');
+      }
+
+      // Armazenar o token no localStorage
+      localStorage.setItem('token', data.token);
+
+      // Redirecionar para a página inicial
+      navigate('/carrinho');
+    } catch (error) {
+      setError(error.message); // Definir mensagem de erro
+    }
   };
 
   return (
@@ -39,7 +64,8 @@ const Login = () => {
             required 
           />
         </div>
-        <button type="submit" className="login-button" onClick={() => navigate('/home')}>Entrar</button>
+        {error && <div className="error-message">{error}</div>} {/* Exibir erro, se houver */}
+        <button type="submit" className="login-button">Entrar</button>
       </form>
       <button className="register-button" onClick={() => navigate('/registro')}>
         Criar Conta

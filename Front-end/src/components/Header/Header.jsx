@@ -33,7 +33,7 @@ function Header({ alwaysWhite }) {
     return (
         <header className={headerClass}>
             <div id="logo">
-                <img src="./images/logo.png" alt="Logo" />
+                <img src="/images/logo.png" alt="Logo" />
                 <a href="/" id="logo-text">TEARTI</a>
             </div>
             <div id="menu-toggle" onClick={toggleMenu}>

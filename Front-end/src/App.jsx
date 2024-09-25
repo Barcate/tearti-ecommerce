@@ -14,7 +14,7 @@ const App = () => {
       <Header alwaysWhite={false} /> {/* Cabeçalho não branco por padrão em todas as páginas */}
       <Routes>
         <Route
-          path="/"
+          path="/login"
           element={<Login />}
         />
         {/* Atualize a rota do produto para aceitar um ID */}
@@ -23,7 +23,7 @@ const App = () => {
           element={<Produto />}
         />
         <Route
-          path="/home"
+          path="/"
           element={<Home />}
         />
         <Route

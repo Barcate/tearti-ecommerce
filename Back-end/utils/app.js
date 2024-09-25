@@ -1,41 +1,50 @@
 require('dotenv').config()
 const express = require('express')
-const cors = require('cors');
+const cors = require('cors')
+const jwt = require('jsonwebtoken') // Adicionando o jsonwebtoken
+
 const {
-    createProduto,
+    getAllProduto,
     getProduto,
-    getallProduto,
-    updateProduto,
-    deleteProduto,
-    createThumbnail,
+    getAllThumbnail,
     getThumbnail,
-    getallThumbnail,
-    updateThumbnail,
-    deleteThumbnail
+    createUsuario,
+    getUsuarioPorEmail,
+    getUsuarioPorNome,
+    verificarLogin
 } = require('./database')
+
 const expressApp = express()
 
 expressApp.use(express.json())
+expressApp.use(cors())
 
-expressApp.use(cors());
 expressApp.get('/status', (request, response) => {
     response.json({ status: 'OK' })
 })
 
-// Rotas CRUD para Produto
+// Middleware para verificar o token JWT
+function verificarToken(request, response, next) {
+    const authHeader = request.headers['authorization']
+    const token = authHeader && authHeader.split(' ')[1]
 
-expressApp.post('/produtos', async (request, response) => {
-    const { nome, descricao, preco, estoque, disponivel } = request.body
-    try {
-        const id = await createProduto(nome, descricao, preco, estoque, disponivel)
-        response.status(201).json({ id })
-    } catch (error) {
-        response.status(500).json({ error: error.message })
+    if (!token) {
+        return response.status(401).json({ error: 'Token de autenticação não fornecido!' })
     }
-})
+
+    jwt.verify(token, process.env.JWT_SECRET, (err, usuario) => {
+        if (err) {
+            return response.status(403).json({ error: 'Token inválido!' })
+        }
+
+        request.usuario = usuario
+        next()
+    })
+}
+
 expressApp.get('/produtos', async (request, response) => {
     try {
-        const produto = await getallProduto()
+        const produto = await getAllProduto()
         if (produto) {
             response.json(produto)
         } else {
@@ -60,41 +69,9 @@ expressApp.get('/produtos/:id', async (request, response) => {
     }
 })
 
-expressApp.put('/produtos/:id', async (request, response) => {
-    const { id } = request.params
-    const { nome, descricao, preco, estoque, disponivel } = request.body
-    try {
-        await updateProduto(id, nome, descricao, preco, estoque, disponivel)
-        response.json({ message: 'Produto atualizado com sucesso!' })
-    } catch (error) {
-        response.status(500).json({ error: error.message })
-    }
-})
-
-expressApp.delete('/produtos/:id', async (request, response) => {
-    const { id } = request.params
-    try {
-        await deleteProduto(id)
-        response.json({ message: 'Produto deletado com sucesso!' })
-    } catch (error) {
-        response.status(500).json({ error: error.message })
-    }
-})
-
-// Rotas CRUD para Thumbnail
-
-expressApp.post('/thumbnails', async (request, response) => {
-    const { base64, produtoID } = request.body
-    try {
-        const id = await createThumbnail(base64, produtoID)
-        response.status(201).json({ id })
-    } catch (error) {
-        response.status(500).json({ error: error.message })
-    }
-})
 expressApp.get('/thumbnails', async (request, response) => {
     try {
-        const thumbnail = await getallThumbnail()
+        const thumbnail = await getAllThumbnail()
         if (thumbnail) {
             response.json(thumbnail)
         } else {
@@ -104,6 +81,7 @@ expressApp.get('/thumbnails', async (request, response) => {
         response.status(500).json({ error: error.message })
     }
 })
+
 
 expressApp.get('/thumbnails/:id', async (request, response) => {
     const { id } = request.params
@@ -119,22 +97,41 @@ expressApp.get('/thumbnails/:id', async (request, response) => {
     }
 })
 
-expressApp.put('/thumbnails/:id', async (request, response) => {
-    const { id } = request.params
-    const { base64, produtoID } = request.body
+// Rota de Login com geração do token JWT
+expressApp.post('/usuarios/login', async (request, response) => {
+    const { email, senha } = request.body
     try {
-        await updateThumbnail(id, base64, produtoID)
-        response.json({ message: 'Thumbnail atualizado com sucesso!' })
+        const usuario = await verificarLogin(email, senha)
+        if (usuario) {
+            // Gerar o token JWT
+            const token = jwt.sign(
+                { id: usuario.id, email: usuario.email }, 
+                process.env.JWT_SECRET, 
+                { expiresIn: process.env.JWT_EXPIRATION }
+            )
+            response.json({ message: 'Login bem-sucedido', token }) // Devolvendo o token no login
+        } else {
+            response.status(401).json({ error: 'Credenciais inválidas' })
+        }
     } catch (error) {
         response.status(500).json({ error: error.message })
     }
 })
 
-expressApp.delete('/thumbnails/:id', async (request, response) => {
-    const { id } = request.params
+expressApp.post('/usuarios', async (request, response) => {
+    const { nome, email, senha } = request.body
     try {
-        await deleteThumbnail(id)
-        response.json({ message: 'Thumbnail deletado com sucesso!' })
+        const usuarioExistentePorEmail = await getUsuarioPorEmail(email)
+        const usuarioExistentePorNome = await getUsuarioPorNome(nome)
+        if (usuarioExistentePorEmail) {
+            return response.status(400).json({ error: 'E-mail já está em uso!' })
+        }
+        if (usuarioExistentePorNome) {
+            return response.status(400).json({ error: 'Nome de usuário já está em uso!' })
+        }
+
+        const id = await createUsuario(nome, email, senha)
+        response.status(201).json({ id })
     } catch (error) {
         response.status(500).json({ error: error.message })
     }

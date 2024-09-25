@@ -3,51 +3,51 @@ const db = new sqlite3.Database('./bancodedados.db')
 
 db.serialize(() => {
   db.run(`CREATE TABLE Usuario (
-    ID INTEGER PRIMARY KEY AUTOINCREMENT,
-    NOME TEXT NOT NULL,
-    EMAIL TEXT NOT NULL,
-    SENHA TEXT NOT NULL
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nome TEXT NOT NULL,
+    email TEXT NOT NULL,
+    senha TEXT NOT NULL
   )`)
 
   db.run(`CREATE TABLE Produto (
-    ID INTEGER PRIMARY KEY AUTOINCREMENT,
-    NOME TEXT NOT NULL,
-    DESCRICAO TEXT NOT NULL,
-    PRECO REAL NOT NULL,
-    ESTOQUE INTEGER NOT NULL,
-    DISPONIVEL INTEGER NOT NULL
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nome TEXT NOT NULL,
+    descricao TEXT NOT NULL,
+    preco REAL NOT NULL,
+    estoque INTEGER NOT NULL,
+    disponivel INTEGER NOT NULL
   )`)
 
   db.run(`CREATE TABLE Thumbnail (
-    ID INTEGER PRIMARY KEY AUTOINCREMENT,
-    BASE64 TEXT NOT NULL,
-    ProdutoID INTEGER,
-    FOREIGN KEY(ProdutoID) REFERENCES Produto(ID)
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    base64 TEXT NOT NULL,
+    produtoId INTEGER,
+    FOREIGN KEY(produtoId) REFERENCES Produto(ID)
   )`)
 
   db.run(`CREATE TABLE Review (
-    ID INTEGER PRIMARY KEY AUTOINCREMENT,
-    TEXTO TEXT NOT NULL,
-    AVALIACAO INTEGER NOT NULL,
-    ID_USUARIO INTEGER,
-    ProdutoID INTEGER,
-    FOREIGN KEY(ID_USUARIO) REFERENCES Usuario(ID),
-    FOREIGN KEY(ProdutoID) REFERENCES Produto(ID)
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    texto TEXT NOT NULL,
+    avaliacao INTEGER NOT NULL,
+    usuarioId INTEGER,
+    produtoId INTEGER,
+    FOREIGN KEY(usuarioId) REFERENCES Usuario(ID),
+    FOREIGN KEY(produtoId) REFERENCES Produto(ID)
   )`)
 
   db.run(`CREATE TABLE CarrinhoDeCompras (
-    ID INTEGER PRIMARY KEY AUTOINCREMENT,
-    TOTAL REAL NOT NULL
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    total REAL NOT NULL
   )`)
 
   db.run(`CREATE TABLE ItemCarrinho (
-    ID INTEGER PRIMARY KEY AUTOINCREMENT,
-    QUANTIDADE INTEGER NOT NULL,
-    PRECO REAL NOT NULL,
-    ProdutoID INTEGER,
-    CarrinhoID INTEGER,
-    FOREIGN KEY(ProdutoID) REFERENCES Produto(ID),
-    FOREIGN KEY(CarrinhoID) REFERENCES CarrinhoDeCompras(ID)
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    quantidade INTEGER NOT NULL,
+    preco REAL NOT NULL,
+    produtoId INTEGER,
+    carrinhoId INTEGER,
+    FOREIGN KEY(produtoId) REFERENCES Produto(ID),
+    FOREIGN KEY(carrinhoId) REFERENCES CarrinhoDeCompras(ID)
   )`)
 
   console.log('Tabelas criadas com sucesso!')

@@ -17,7 +17,7 @@ const Produto = () => {
 
         const thumbResponse = await fetch(`http://localhost:5000/thumbnails/${id}`);
         const thumbData = await thumbResponse.json();
-        setThumbnail(thumbData.BASE64);
+        setThumbnail(thumbData.base64);
       } catch (error) {
         console.error('Error fetching product:', error);
       }
@@ -28,7 +28,7 @@ const Produto = () => {
 
   // Função para aumentar a quantidade
   const aumentarQuantidade = () => {
-    if (quantidade < produto.ESTOQUE) {
+    if (quantidade < produto.estoque) {
       setQuantidade(quantidade + 1);
     }
   };
@@ -43,7 +43,7 @@ const Produto = () => {
   // Função para adicionar ao carrinho
   const adicionarAoCarrinho = () => {
     // Aqui você pode adicionar a lógica para adicionar o produto ao carrinho
-    console.log(`Adicionando ${quantidade} de ${produto.NOME} ao carrinho.`);
+    console.log(`Adicionando ${quantidade} de ${produto.nome} ao carrinho.`);
   };
 
   if (!produto) {
@@ -54,24 +54,24 @@ const Produto = () => {
     <div className="produto-container">
       <div className="produto-detalhes">
         <div className="produto-foto">
-          <img src={thumbnail} alt={produto.NOME} />
+          <img src={thumbnail} alt={produto.nome} />
         </div>
         <div className="produto-informacoes">
-          <h1>{produto.NOME}</h1>
+          <h1>{produto.nome}</h1>
           <div className="preco">
-            R${produto.PRECO.toFixed(2)}
+            R${produto.preco.toFixed(2)}
             <span className="desconto">R$16.00</span> {/* Exemplo de preço anterior */}
             <span className="desconto-porcentagem">-30%</span>
           </div>
-          <p>{produto.DESCRICAO}</p>
-          <p>Estoque: {produto.ESTOQUE}</p>
-          <p>{produto.DISPONIVEL ? 'Disponível' : 'Indisponível'}</p>
+          <p>{produto.descricao}</p>
+          <p>Estoque: {produto.estoque}</p>
+          <p>{produto.disponivel ? 'Disponível' : 'Indisponível'}</p>
 
           {/* Controles de quantidade */}
           <div className="controle-quantidade">
             <button onClick={diminuirQuantidade} disabled={quantidade <= 1}>-</button>
             <span>{quantidade}</span>
-            <button onClick={aumentarQuantidade} disabled={quantidade >= produto.ESTOQUE}>+</button>
+            <button onClick={aumentarQuantidade} disabled={quantidade >= produto.estoque}>+</button>
           </div>
 
           <button className="adicionar-carrinho" onClick={adicionarAoCarrinho}>Adicionar ao Carrinho</button>
