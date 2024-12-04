@@ -108,8 +108,6 @@ const Produto = () => {
           <h1>{produto.nome}</h1>
           <div className="preco">
             R${produto.preco.toFixed(2)}
-            {/* <span className="desconto">R$16.00</span>
-            <span className="desconto-porcentagem">-30%</span> */}
           </div>
           <p>{produto.descricao}</p>
           <p>Estoque: {produto.estoque}</p>
@@ -121,7 +119,7 @@ const Produto = () => {
             <span>{quantidade}</span>
             <button onClick={aumentarQuantidade} disabled={quantidade >= produto.estoque}>+</button>
           </div>
-
+          
           <button className="adicionar-carrinho" onClick={adicionarAoCarrinho}>Adicionar ao Carrinho</button>
         </div>
       </div>
