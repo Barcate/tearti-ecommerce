@@ -44,9 +44,7 @@ function Header({ alwaysWhite }) {
             <nav id="item2" className={menuOpen ? 'show' : ''}>
                 <a href="/carrinho" id="item2-1">CARRINHO</a>
                 <a href="/" id="item2-2">PRODUTOS</a>
-                <a href="#" id="item2-3">CUSTOMIZAR</a>
-                <a href="#" id="item2-4">CONTATO</a>
-                <a href="#" id="item2-5">QUEM SOMOS</a>
+                <a href="/encomendas" id="item2-3">ENCOMENDAR</a>
             </nav>
         </header>
     );

@@ -7,6 +7,9 @@ const Produto = () => {
   const [produto, setProduto] = useState(null);
   const [thumbnail, setThumbnail] = useState('');
   const [quantidade, setQuantidade] = useState(1); // Estado para a quantidade
+  const [avaliacao, setAvaliacao] = useState(0); // Estado para a avaliação do produto
+  const [comentarios, setComentarios] = useState([]); // Estado para os comentários
+  const [corSelecionada, setCorSelecionada] = useState(''); // Estado para a cor selecionada
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -19,6 +22,16 @@ const Produto = () => {
         const thumbResponse = await fetch(`http://localhost:5000/thumbnails/${id}`);
         const thumbData = await thumbResponse.json();
         setThumbnail(thumbData.base64);
+
+        // Buscar as avaliações e comentários
+        const comentariosResponse = await fetch(`http://localhost:5000/comentarios/${id}`);
+        const comentariosData = await comentariosResponse.json();
+        setComentarios(comentariosData);
+
+        // Calcular a média das estrelas
+        const mediaEstrelas = comentariosData.reduce((acc, comentario) => acc + comentario.estrelas, 0) / comentariosData.length;
+        setAvaliacao(mediaEstrelas);
+
       } catch (error) {
         console.error('Error fetching product:', error);
       }
@@ -44,7 +57,7 @@ const Produto = () => {
   // Função para adicionar ao carrinho
   const adicionarAoCarrinho = () => {
     // Aqui você pode adicionar a lógica para adicionar o produto ao carrinho
-    console.log(`Adicionando ${quantidade} de ${produto.nome} ao carrinho.`);
+    console.log(`Adicionando ${quantidade} de ${produto.nome} ao carrinho. Cor: ${corSelecionada}`);
 
     const token = localStorage.getItem('token');
     let isValid = true;
@@ -59,8 +72,6 @@ const Produto = () => {
           'Authorization': `Bearer ${token}`
         }
       }).then(async (response) => {
-        // const data = await response.json();
-
         if (!response.ok) {
           localStorage.clear();
           isValid = false;
@@ -69,7 +80,7 @@ const Produto = () => {
       })
     }
     
-    if (!isValid) return
+    if (!isValid) return;
     fetch(`http://localhost:5000/carrinho`, {
       method: 'POST',
       headers: {
@@ -78,7 +89,8 @@ const Produto = () => {
       },
       body: JSON.stringify({
         quantidade,
-        produtoId: id
+        produtoId: id,
+        cor: corSelecionada
       })
     }).then(async (response) => {
       const data = await response.json();
@@ -86,12 +98,17 @@ const Produto = () => {
       if (!response.ok) {
         throw new Error(data.error);
       } else {
-        alert('Item adicionado com sucesso!')
-        navigate('/')
+        alert('Item adicionado com sucesso!');
+        navigate('/');
       }
     }).catch((error) => {
-      alert(error.message)
+      alert(error.message);
     });
+  };
+
+  // Função para lidar com a mudança de cor
+  const selecionarCor = (cor) => {
+    setCorSelecionada(cor);
   };
 
   if (!produto) {
@@ -113,14 +130,50 @@ const Produto = () => {
           <p>Estoque: {produto.estoque}</p>
           <p>{produto.disponivel ? 'Disponível' : 'Indisponível'}</p>
 
+          {/* Seleção de cor */}
+          {produto.cores && produto.cores.length > 0 && (
+            <div className="selecao-cor">
+              <h3>Selecione a Cor</h3>
+              <div className="cores">
+                {produto.cores.map((cor) => (
+                  <button
+                    key={cor}
+                    className={`cor ${cor === corSelecionada ? 'selecionada' : ''}`}
+                    style={{ backgroundColor: cor }}
+                    onClick={() => selecionarCor(cor)}
+                  >
+                    {cor === corSelecionada ? '✓' : ''}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Controles de quantidade */}
           <div className="controle-quantidade">
             <button onClick={diminuirQuantidade} disabled={quantidade <= 1}>-</button>
             <span>{quantidade}</span>
             <button onClick={aumentarQuantidade} disabled={quantidade >= produto.estoque}>+</button>
           </div>
-          
+
           <button className="adicionar-carrinho" onClick={adicionarAoCarrinho}>Adicionar ao Carrinho</button>
+        </div>
+      </div>
+
+      {/* Seção de Avaliações e Comentários */}
+      <div className="avaliacoes-comentarios">
+        <div className="avaliacao">
+          <h3>Avaliação do Produto</h3>
+          <div className="estrelas">
+            {[1, 2, 3, 4, 5].map((estrela) => (
+              <span key={estrela} className={`estrela ${avaliacao >= estrela ? 'cheia' : ''}`}>★</span>
+            ))}
+          </div>
+          <p>Média de Avaliação: {avaliacao.toFixed(1)} estrelas</p>
+        </div>
+
+        <div className="comentarios-link">
+          <button onClick={() => navigate(`/produto/${id}/comentarios`)}>Ver Comentários</button>
         </div>
       </div>
     </div>

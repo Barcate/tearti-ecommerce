@@ -6,6 +6,11 @@ import Header from './components/Header/Header'; // Importa o Header
 import Carrinho from './pages/Carrinho/Carrinho'; // Importa o componente Carrinho
 import Login from './pages/Login/Login'; // Importa o componente Carrinho
 import Registro from './pages/Registro/Registro'; // Importa o componente Carrinho
+import Admin_Login from './pages/Admin_Login/Admin_Login'; // Importa o componente adminlogin
+import Admin from './pages/Admin/Admin'; // Importa o componente admin
+import Comentarios from './pages/Review/Review'; // Importa o componente review
+import Encomendas from './pages/OrderPage/OrderPage'; // Importa o componente encomenda
+import Footer from './components/Footer/footer'; // Importa o Footer
 import './App.css'; // Importa o CSS para o componente App
 
 const App = () => {
@@ -17,7 +22,6 @@ const App = () => {
           path="/login"
           element={<Login />}
         />
-        {/* Atualize a rota do produto para aceitar um ID */}
         <Route
           path="/produto/:id"
           element={<Produto />}
@@ -30,13 +34,28 @@ const App = () => {
           path="/registro"
           element={<Registro />}
         />
-        {/* Rota do carrinho */}
         <Route
           path="/carrinho"
           element={<Carrinho />}
         />
-        {/* Adicione outras rotas conforme necessário */}
+        <Route
+          path="/loginadm"
+          element={<Admin_Login />}
+        />
+        <Route
+          path="/adm"
+          element={<Admin />}
+        />
+        <Route
+          path="/produto/:id/comentarios"
+          element={<Comentarios />}
+        />
+        <Route
+          path="/encomendas"
+          element={<Encomendas />}
+        />
       </Routes>
+      <Footer /> {/* Footer será renderizado em todas as páginas */}
     </Router>
   );
 };
