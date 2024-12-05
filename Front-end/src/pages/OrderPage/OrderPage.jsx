@@ -51,7 +51,7 @@ const OrderPage = () => {
           onChange={(e) => setSelectedItem(e.target.value)}
         >
           <option value="">Selecione...</option>
-          {dropdownItems.map((item) => !item.disponivel ? (
+          {dropdownItems.map((item) => item.disponivel ? (
             <option key={item.id} value={item.nome}>
               {item.nome}
             </option>
