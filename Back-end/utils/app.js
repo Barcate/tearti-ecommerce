@@ -16,12 +16,16 @@ const {
     getItensCarrinho,
     updateItemCarrinho,
     deleteItemCarrinho,
-    isItemCarrinhoDoUsuario
+    isItemCarrinhoDoUsuario,
+    createReview,
+    getReviewsDoProduto,
+    createProduto,
+    createThumbnail
 } = require('./database')
 
 const expressApp = express()
 
-expressApp.use(express.json())
+expressApp.use(express.json({ limit: '150mb' }))
 expressApp.use(cors())
 
 expressApp.get('/status', (request, response) => {
@@ -114,7 +118,7 @@ expressApp.post('/usuarios/login', async (request, response) => {
                 process.env.JWT_SECRET, 
                 { expiresIn: process.env.JWT_EXPIRATION }
             )
-            response.json({ message: 'Login bem-sucedido', token }) // Devolvendo o token no login
+            response.json({ message: 'Login bem-sucedido', token, admin: usuario.admin }) // Devolvendo o token no login
         } else {
             response.status(401).json({ error: 'Credenciais inválidas' })
         }
@@ -154,7 +158,8 @@ expressApp.get('/usuarios/me', verificarToken, async (request, response) => {
         response.json({
             id: usuario.id,
             nome: usuario.nome,
-            email: usuario.email
+            email: usuario.email,
+            admin: usuario.admin
         });
     } catch (error) {
         response.status(500).json({ error: error.message });
@@ -220,5 +225,78 @@ expressApp.delete('/carrinho/:id', verificarToken, async (request, response) => 
         response.status(500).json({ error: error.message });
     }
 });
+
+expressApp.get('/reviews/:produtoId', async (request, response) => {
+    const { produtoId } = request.params;
+
+    try {
+        const reviews = await getReviewsDoProduto(produtoId);
+        response.status(200).json({ reviews });
+    } catch(error) {
+        response.status(500).json({ error: error.message });
+    }
+})
+
+expressApp.post('/reviews', verificarToken, async (request, response) => {
+    const { produtoId, texto, avaliacao } = request.body;
+    const usuarioId = request.usuario.id; // ID do usuário autenticado
+
+    const existeProduto = await getProduto(produtoId);
+
+    if (!existeProduto) return response.status(404).json({ error: "Não existe um produto com esse ID!" });
+
+    try {
+        const id = await createReview(texto, avaliacao, usuarioId, produtoId);
+        response.status(200).json({ id });
+    } catch(error) {
+        response.status(500).json({ error: error.message });
+    }
+})
+
+expressApp.post('/produto', verificarToken, async (request, response) => {
+    const usuarioObject = await getUsuarioPorEmail(request.usuario.email);
+
+    if (!usuarioObject) return response.status(404).json({ error: "Esse usuário não existe." })
+
+    const isAdmin = usuarioObject.admin == 1;
+
+    if (!isAdmin) return response.status(401).json({ error: "Você não tem permissão para isso." });
+
+    console.log(request.body);
+    const { nome, descricao, preco, estoque, disponivel } = request.body;
+
+    if (!nome || !descricao || !preco) return response.status(400).json({ error: "Houve um problema nos requisitos, faltou algo." });
+
+    try {
+        const id = await createProduto(nome, descricao, preco, estoque, disponivel);
+        return response.status(200).json({ id });
+    } catch(error) {
+        return response.status(500).json({ error: error.message });
+    }
+})
+
+expressApp.post('/thumbnails/:productId', verificarToken, async (request, response) => {
+    const usuarioObject = await getUsuarioPorEmail(request.usuario.email);
+    const { productId } = request.params;
+
+    if (!usuarioObject) return response.status(404).json({ error: "Esse usuário não existe." })
+
+    const isAdmin = usuarioObject.admin == 1;
+
+    if (!isAdmin) return response.status(401).json({ error: "Você não tem permissão para isso." });
+
+    const { thumbnails } = request.body;
+
+    if (!thumbnails || thumbnails.length > 3 || !productId) return response.status(400).json({ error: "Houve um problema nos requisitos, faltou algo ou foram thumbnails demais." });
+
+    try {
+        for (const thumbnail of thumbnails) {
+            await createThumbnail(thumbnail, productId);
+        }
+        return response.status(200).json({ message: "Thumbnail criada com sucesso!" });
+    } catch(error) {
+        return response.status(500).json({ error: error.message });
+    }
+})
 
 module.exports = expressApp

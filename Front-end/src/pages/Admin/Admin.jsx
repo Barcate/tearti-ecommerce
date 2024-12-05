@@ -1,42 +1,118 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Admin.css';
+import { useNavigate } from 'react-router-dom';
 
 const Admin = () => {
   const [productName, setProductName] = useState('');
   const [quantity, setQuantity] = useState(0);
-  const [colors, setColors] = useState([]);
-  const [photo, setPhoto] = useState(null);
+  const [price, setPrice] = useState(''); // Estado para o preço
+  const [imageFiles, setImageFiles] = useState([]);
   const [allowOrder, setAllowOrder] = useState(false);
+  const [description, setDescription] = useState('');
+  const [base64Array, setBase64Array] = useState([]);
+  const navigate = useNavigate();
 
-  const handleColorAdd = (e) => {
-    if (e.key === 'Enter' && e.target.value.trim()) {
-      setColors([...colors, e.target.value.trim()]);
-      e.target.value = ''; // Limpa o input de cores
+  useEffect(() => {
+    if (imageFiles.length) {
+      if (imageFiles.length > 3) {
+        alert('No máximo 3 fotos!');
+        setImageFiles([]);
+        setBase64Array([]);
+      } else {
+        const promises = Array.from(imageFiles).map((file) => {
+          return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onloadend = () => resolve(reader.result);
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+          });
+        });
+
+        Promise.all(promises)
+          .then((base64Images) => {
+            setBase64Array(base64Images);
+          })
+          .catch(() => {
+            alert('Erro ao carregar as imagens.');
+          });
+      }
     }
-  };
+  }, [imageFiles]);
 
-  const handleColorRemove = (color) => {
-    setColors(colors.filter((c) => c !== color));
-  };
+  useEffect(() => {
+    const token = localStorage.getItem('token');
 
-  const handleSubmit = (e) => {
+    if (!token) {
+      navigate('/loginadm');
+    } else {
+      fetch('http://localhost:5000/usuarios/me', {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }).then(async (response) => {
+        const data = await response.json();
+
+        if (response.ok) {
+          if (!data.admin) {
+            localStorage.clear();
+            navigate('/loginadm');
+          }
+        } else {
+          localStorage.clear();
+          navigate('/loginadm');
+        }
+      });
+    }
+  }, [navigate]);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    const token = localStorage.getItem('token');
 
-    if (!productName || !photo) {
+    if (!productName || !base64Array.length) {
       alert('O nome do produto e a foto são obrigatórios.');
       return;
     }
 
+    if (price <= 0) {
+      alert('O preço deve ser maior que 0.');
+      return;
+    }
+
     const productData = {
-      productName,
-      quantity: parseInt(quantity, 10),
-      colors,
-      allowOrder,
+      nome: productName,
+      estoque: parseInt(quantity),
+      preco: parseFloat(price),
+      disponivel: allowOrder,
+      descricao: description,
     };
 
-    console.log('Produto enviado:', productData);
-    alert('Produto enviado com sucesso!');
-    // Aqui você pode fazer a chamada à API para salvar o produto
+    const response = await fetch('http://localhost:5000/produto', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify(productData)
+    })
+    const data = await response.json();
+
+    if (!response.ok) {
+      alert(data.error);
+    } else {
+      alert('Produto enviado com sucesso!');
+      const { id } = data;
+
+      await fetch(`http://localhost:5000/thumbnails/${id}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ thumbnails: base64Array })
+      })
+    }
   };
 
   return (
@@ -55,54 +131,68 @@ const Admin = () => {
           />
         </div>
         <div className="form-group">
+          <label htmlFor="description">Descrição</label>
+          <textarea
+            id="description"
+            cols="50"
+            rows="3"
+            placeholder="Descrição aqui..."
+            onChange={(e) => setDescription(e.target.value)}
+            required
+            value={description}
+          />
+        </div>
+        <div className="form-group">
           <label htmlFor="quantity">Quantidade</label>
           <input
             type="number"
             id="quantity"
             value={quantity}
-            onChange={(e) => setQuantity(e.target.value)}
+            onChange={(e) => setQuantity(e.target.value > 0 ? e.target.value : 0)}
             placeholder="Digite a quantidade disponível"
           />
-          <div className="allow-order">
-            <input
+        </div>
+        <div className="form-group">
+          <label htmlFor="price">Preço</label>
+          <input
+            type="number"
+            id="price"
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
+            placeholder="Digite o preço do produto"
+            step="0.01"
+            min="0"
+            required
+          />
+        </div>
+        <div className="form-group">
+          <input
             type="checkbox"
             id="allowOrder"
             checked={allowOrder}
             onChange={(e) => setAllowOrder(e.target.checked)}
-            />
-            <label htmlFor="allowOrder">Permitir pedidos fora de estoque</label>
-            </div>
-        </div>
-        <div className="form-group">
-          <label htmlFor="colors">Cores Disponíveis</label>
-          <input
-            type="text"
-            id="colors"
-            placeholder="Digite uma cor e pressione Enter"
-            onKeyDown={handleColorAdd}
           />
-          <div className="colors-list">
-            {colors.map((color, index) => (
-              <span key={index} className="color-tag">
-                {color}
-                <button type="button" onClick={() => handleColorRemove(color)}>
-                  &times;
-                </button>
-              </span>
-            ))}
-          </div>
+          <label htmlFor="allowOrder">Permitir pedidos fora de estoque</label>
         </div>
         <div className="form-group">
-          <label htmlFor="photo">Foto do Produto</label>
+          <label htmlFor="photo">Fotos do Produto</label>
           <input
             type="file"
             id="photo"
             accept="image/*"
-            onChange={(e) => setPhoto(e.target.files[0])}
+            onChange={(e) => (e.target.files.length > 3 ? e.preventDefault() : setImageFiles(e.target.files))}
+            multiple
             required
           />
+          <div className="image-previews">
+            {base64Array.map((image, index) => (
+              <img key={index} src={image} alt={`Preview ${index + 1}`} width="50%" className="image-preview" />
+            ))}
+          </div>
         </div>
-        <button type="submit" className="submit-button">Adicionar Produto</button>
+        <button type="submit" className="submit-button">
+          Adicionar Produto
+        </button>
       </form>
     </div>
   );

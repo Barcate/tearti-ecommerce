@@ -136,12 +136,12 @@ async function deleteThumbnail(id) {
   }
 }
 
-async function createUsuario(nome, email, senha) {
+async function createUsuario(nome, email, senha, isAdmin = 0) {
   try {
     const saltRounds = 10;
     const hashedSenha = await bcrypt.hash(senha, saltRounds); // Hash da senha
-    const result = await runQuery(`INSERT INTO Usuario (nome, email, senha) VALUES (?, ?, ?)`,
-      [nome, email, hashedSenha])
+    const result = await runQuery(`INSERT INTO Usuario (nome, email, senha, admin) VALUES (?, ?, ?, ?)`,
+      [nome, email, hashedSenha, isAdmin])
     console.log(`Usuário criado com ID: ${result.lastID}`)
     return result.lastID
   } catch (err) {
@@ -287,6 +287,32 @@ async function isItemCarrinhoDoUsuario(itemId, usuarioId) {
   }
 }
 
+async function createReview(texto, avaliacao, usuarioId, produtoId) {
+  try {
+    const result = await runQuery(
+      `INSERT INTO Review (texto, avaliacao, usuarioId, produtoId) VALUES (?, ?, ?, ?)`,
+      [texto, avaliacao, usuarioId, produtoId]
+    );
+    console.log(`Review criada com ID: ${result.lastID}`);
+    return result.lastID;
+  } catch (err) {
+    console.error(err.message);
+  }
+}
+
+async function getReviewsDoProduto(produtoId) {
+  try {
+    const rows = await getQueryAll(
+      `SELECT r.*, u.nome FROM Review r, Produto p, Usuario u WHERE r.produtoId = p.id AND r.usuarioId = u.id AND p.id = ?`,
+      [produtoId]
+    );
+    console.log(rows);
+    return rows;
+  } catch (err) {
+    console.error(err.message);
+  }
+}
+
 module.exports = {
   createProduto,
   getProduto,
@@ -310,5 +336,7 @@ module.exports = {
   getItensCarrinho,
   updateItemCarrinho,
   deleteItemCarrinho,
-  isItemCarrinhoDoUsuario
+  isItemCarrinhoDoUsuario,
+  createReview,
+  getReviewsDoProduto
 }

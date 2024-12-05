@@ -6,6 +6,10 @@
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   }
+
+.author {
+  font-size: .8em;
+}
   
   .review-title {
     text-align: center;
@@ -29,16 +33,17 @@
   }
   
   .review-form .stars {
-    font-size: 20px;
-    color: #ffc107;
+    /* color: #ffc107; */
   }
   
   .review-form .estrela {
     cursor: pointer;
     margin: 0 5px;
+    font-size: 2em !important;
+    color: #333;
   }
   
-  .review-form .estrela.filled {
+  .review-form .estrela.cheio {
     color: #ffc107;
   }
   
@@ -72,14 +77,14 @@
   
   .review-item .stars {
     font-size: 20px;
-    color: #ffc107;
+    color: #333;
   }
   
   .review-item .estrela {
     margin: 0 5px;
   }
   
-  .review-item .estrela.filled {
+  .review-item .estrela.cheio {
     color: #ffc107;
   }
   

@@ -24,13 +24,15 @@ const Produto = () => {
         setThumbnail(thumbData.base64);
 
         // Buscar as avaliações e comentários
-        const comentariosResponse = await fetch(`http://localhost:5000/comentarios/${id}`);
+        const comentariosResponse = await fetch(`http://localhost:5000/reviews/${id}`);
         const comentariosData = await comentariosResponse.json();
-        setComentarios(comentariosData);
+        // setComentarios(comentariosData.reviews);
 
         // Calcular a média das estrelas
-        const mediaEstrelas = comentariosData.reduce((acc, comentario) => acc + comentario.estrelas, 0) / comentariosData.length;
-        setAvaliacao(mediaEstrelas);
+        console.log(comentariosData.reviews)
+        const mediaEstrelas = comentariosData.reviews.reduce((acc, comentario) => acc + comentario.avaliacao, 0) / comentariosData.reviews.length;
+        // console.log(mediaEstrelas)
+        setAvaliacao(mediaEstrelas || 0);
 
       } catch (error) {
         console.error('Error fetching product:', error);

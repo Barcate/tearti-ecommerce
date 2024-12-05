@@ -111,12 +111,8 @@
 
 .estrelas {
   font-size: 24px;
-  color: #ffc107;
+  color: #333;
   margin-bottom: 10px;
-}
-
-.estrelas .estrela {
-  cursor: pointer;
 }
 
 .estrelas .estrela.cheia {

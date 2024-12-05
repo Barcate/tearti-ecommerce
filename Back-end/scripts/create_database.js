@@ -6,7 +6,8 @@ db.serialize(() => {
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     nome TEXT NOT NULL,
     email TEXT NOT NULL,
-    senha TEXT NOT NULL
+    senha TEXT NOT NULL,
+    admin BIT NOT NULL DEFAULT 0
   )`)
 
   db.run(`CREATE TABLE Produto (

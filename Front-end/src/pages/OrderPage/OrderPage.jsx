@@ -2,47 +2,39 @@ import React, { useState, useEffect } from 'react';
 import './OrderPage.css';
 
 const OrderPage = () => {
-  const [products, setProducts] = useState([]);
-  const [selectedProduct, setSelectedProduct] = useState(null);
-  const [selectedColor, setSelectedColor] = useState('');
-  const [quantity, setQuantity] = useState(1);
+  const [dropdownItems, setDropdownItems] = useState([]);
+  const [selectedItem, setSelectedItem] = useState('');
+  const [comment, setComment] = useState('');
+
+  // Função abstrata para buscar itens para o dropdown
+  const fetchDropdownItems = async () => {
+    // Simula uma chamada para uma API
+    const response = await fetch('http://localhost:5000/produtos');
+    const data = await response.json();
+
+    if (!response.ok) {
+      alert(data.error);
+    } else {
+      setDropdownItems(data);
+    }
+  };
 
   useEffect(() => {
-    // Simulação de produtos recebidos de uma API
-    const fetchProducts = () => {
-      const productsData = [
-        {
-          id: 1,
-          name: 'Cachecol de Lã',
-          availableColors: ['Verde', 'Azul', 'Vermelho'],
-          acceptsOrder: true,
-        },
-        {
-          id: 2,
-          name: 'Camiseta Personalizada',
-          availableColors: ['Preto', 'Branco', 'Cinza'],
-          acceptsOrder: false,
-        },
-        {
-          id: 3,
-          name: 'Mochila Escolar',
-          availableColors: ['Preto', 'Cinza'],
-          acceptsOrder: true,
-        },
-      ];
-      setProducts(productsData);
-    };
-
-    fetchProducts();
+    fetchDropdownItems();
   }, []);
 
   const handleSubmit = () => {
-    if (!selectedProduct || !selectedColor) {
-      alert('Por favor, selecione um produto e uma cor.');
+    if (!selectedItem) {
+      alert('Por favor, selecione um item.');
       return;
     }
 
-    const message = `Olá, gostaria de encomendar:\n\nProduto: ${selectedProduct.name}\nCor: ${selectedColor}\nQuantidade: ${quantity}`;
+    if (!comment.trim()) {
+      alert('Por favor, insira um comentário.');
+      return;
+    }
+
+    const message = `Olá, gostaria de fazer uma encomenda:\n\nItem: ${selectedItem}\nObservação: ${comment}`;
     const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
   };
@@ -51,55 +43,31 @@ const OrderPage = () => {
     <div className="order-container">
       <h1>Faça sua Encomenda</h1>
 
-      <div className="product-selection">
-        <label htmlFor="product">Escolha o Produto</label>
+      <div className="dropdown-section">
+        <label htmlFor="dropdown">Selecione um Item</label>
         <select
-          id="product"
-          value={selectedProduct ? selectedProduct.id : ''}
-          onChange={(e) => {
-            const product = products.find((p) => p.id === parseInt(e.target.value, 10));
-            setSelectedProduct(product);
-            setSelectedColor('');
-            setQuantity(1);
-          }}
+          id="dropdown"
+          value={selectedItem}
+          onChange={(e) => setSelectedItem(e.target.value)}
         >
-          <option value="">Selecione um produto</option>
-          {products
-            .filter((product) => product.acceptsOrder)
-            .map((product) => (
-              <option key={product.id} value={product.id}>
-                {product.name}
-              </option>
-            ))}
+          <option value="">Selecione...</option>
+          {dropdownItems.map((item) => !item.disponivel ? (
+            <option key={item.id} value={item.nome}>
+              {item.nome}
+            </option>
+          ) : '')}
         </select>
       </div>
 
-      {selectedProduct && (
-        <div className="color-selection">
-          <label htmlFor="color">Escolha a Cor</label>
-          <select
-            id="color"
-            value={selectedColor}
-            onChange={(e) => setSelectedColor(e.target.value)}
-          >
-            <option value="">Selecione uma cor</option>
-            {selectedProduct.availableColors.map((color, index) => (
-              <option key={index} value={color}>
-                {color}
-              </option>
-            ))}
-          </select>
-        </div>
-      )}
-
-      <div className="quantity-selection">
-        <label htmlFor="quantity">Quantidade</label>
-        <input
-          type="number"
-          id="quantity"
-          min="1"
-          value={quantity}
-          onChange={(e) => setQuantity(e.target.value)}
+      <div className="comment-section">
+        <label htmlFor="comment">Observação</label>
+        <textarea
+          id="comment"
+          cols="50"
+          rows="7"
+          placeholder="Escreva sua observação aqui..."
+          value={comment}
+          onChange={(e) => setComment(e.target.value)}
         />
       </div>
 

@@ -8,7 +8,8 @@
     "create_db": "node scripts/create_database.js",
     "populate_db": "node scripts/populate_database.js",
     "delete_db": "node scripts/delete_database.js",
-    "reset_db": "npm run delete_db && npm run create_db",
+    "create_admin": "node scripts/create_admin.js",
+    "reset_db": "npm run delete_db && npm run create_db && npm run populate_db && npm run create_admin",
     "test": "jest"
   },
   "license": "ISC",
